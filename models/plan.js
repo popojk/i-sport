@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     planName: DataTypes.STRING,
     planAmount: DataTypes.INTEGER,
     price: DataTypes.INTEGER,
-    planType: DataTypes.INTEGER,
+    planType: DataTypes.STRING,
     storeId: DataTypes.INTEGER
   }, {
     sequelize,
