@@ -6,5 +6,6 @@ const { authenticated, authenticatedUser } = require('../../../middleware/api-au
 
 router.post('/', userController.signUp)
 router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), userController.putAccount)
+router.put('/password', authenticated, authenticatedUser, userController.putPassword)
 
 module.exports = router

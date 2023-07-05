@@ -9,6 +9,9 @@ const userController = {
   },
   putAccount: (req, res, next) => {
     userServices.putAccount(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  putPassword: (req, res, next) => {
+    userServices.putPassword(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

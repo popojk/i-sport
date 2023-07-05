@@ -86,6 +86,24 @@ const userServices = {
     } catch (err) {
       cb(err)
     }
+  },
+  putPassword: (req, cb) => {
+    const { password, confirmPassword } = req.body
+    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
+    return Promise.all([
+      User.findByPk(helpers.getUser(req).id),
+      bcrypt.hash(password, 10)
+    ])
+      .then(([user, hash]) => {
+        console.log(hash)
+        user.update({
+          password: hash
+        })
+      })
+      .then(() => {
+        return cb(null, { message: '更新成功' })
+      })
+      .catch(err => cb(err))
   }
 }
 
