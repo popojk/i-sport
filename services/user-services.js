@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const { User } = require('../models')
 const jwt = require('jsonwebtoken')
+const { imgurFileHandler } = require('../helpers/file-helpers')
+const helpers = require('../_helpers')
 
 const userServices = {
   signIn: (req, cb) => {
@@ -49,6 +51,41 @@ const userServices = {
         cb(null, data)
       })
       .catch(err => cb(err))
+  },
+  putAccount: (req, cb) => {
+    try {
+      const { email, nickname } = req.body
+      const { file } = req
+      if (nickname.length > 50) throw new Error('暱稱名稱不可超過50字')
+      return Promise.all([
+        User.findOne({ where: { email }, raw: true }),
+        User.findByPk(helpers.getUser(req).id)
+      ])
+        .then(([emailUser, user]) => {
+          if (emailUser && emailUser.email !== helpers.getUser(req).email) throw new Error('email已重複註冊')
+          if (JSON.stringify(file) !== '{}' && file !== undefined) {
+            return imgurFileHandler(file)
+              .then(avatarFilePath => {
+                return user.update({
+                  email,
+                  nickname,
+                  avatar: avatarFilePath || user.avatar
+                })
+              })
+          } else {
+            return user.update({
+              email,
+              nickname
+            })
+          }
+        })
+        .then(updatedUser => {
+          cb(null, { message: '更新成功' })
+        })
+        .catch(err => cb(err))
+    } catch (err) {
+      cb(err)
+    }
   }
 }
 
