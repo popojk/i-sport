@@ -52,6 +52,16 @@ const userServices = {
       })
       .catch(err => cb(err))
   },
+  getUser: (req, cb) => {
+    return User.findByPk(helpers.getUser(req).id, {
+      raw: true,
+      attributes: ['id', 'email', 'nickname', 'avatar']
+    })
+      .then(user => {
+        cb(null, user)
+      })
+      .catch(err => cb(err))
+  },
   putAccount: (req, cb) => {
     try {
       const { email, nickname } = req.body

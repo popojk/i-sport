@@ -5,6 +5,7 @@ const userController = require('../../../controllers/apis/user-controller')
 const { authenticated, authenticatedUser } = require('../../../middleware/api-auth')
 
 router.post('/', userController.signUp)
+router.get('/account', authenticated, authenticatedUser, userController.getUser)
 router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), userController.putAccount)
 router.put('/password', authenticated, authenticatedUser, userController.putPassword)
 

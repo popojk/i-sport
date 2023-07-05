@@ -7,6 +7,9 @@ const userController = {
   signUp: (req, res, next) => {
     userServices.signUp(req, (err, data) => err ? next(err) : res.json(data))
   },
+  getUser: (req, res, next) => {
+    userServices.getUser(req, (err, data) => err ? next(err) : res.json(data))
+  },
   putAccount: (req, res, next) => {
     userServices.putAccount(req, (err, data) => err ? next(err) : res.json(data))
   },
