@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   })
   Store.associate = function (models) {
     // associations can be defined here
-    Store.belongsToMany(models.User, { foreignKey: 'userId' })
+    Store.belongsTo(models.User, { foreignKey: 'userId' })
     Store.hasMany(models.Collection, { foreignKey: 'storeId' })
     Store.hasMany(models.Review, { foreignKey: 'storeId' })
     Store.hasMany(models.Plan, { foreignKey: 'storeId' })
