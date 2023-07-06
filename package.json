@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:undo:all && npx sequelize-cli db:seed:all",
     "start": "NODE_ENV=development node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
+    "prod": "NODE_ENV=production nodemon app.js",
     "test": "mocha test --exit --recursive --timeout 5000",
     "lint": "eslint \"**/*.js\" --fix"
   },
