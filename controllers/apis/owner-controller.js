@@ -15,7 +15,7 @@ const ownerController = {
   },
   putPassword: (req, res, next) => {
     ownerServices.putPassword(req, (err, data) => err ? next(err) : res.json(data))
-  },
+  }
 }
 
 module.exports = ownerController

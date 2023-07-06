@@ -45,7 +45,7 @@ const ownerServices = {
         const data = {
           message: '註冊成功',
           token,
-          userId: userData.id,
+          userId: userData.id
         }
         cb(null, data)
       })
@@ -100,7 +100,7 @@ const ownerServices = {
         return cb(null, { message: '更新成功' })
       })
       .catch(err => cb(err))
-  },
+  }
 }
 
 module.exports = ownerServices
