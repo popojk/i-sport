@@ -1,10 +1,9 @@
 const bcrypt = require('bcryptjs')
 const { User } = require('../models')
 const jwt = require('jsonwebtoken')
-const { imgurFileHandler } = require('../helpers/file-helpers')
 const helpers = require('../_helpers')
 
-const userServices = {
+const ownerServices = {
   signIn: (req, cb) => {
     try {
       const userData = req.user.toJSON()
@@ -12,8 +11,7 @@ const userServices = {
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
       const data = {
         token,
-        userId: userData.id,
-        avatar: userData.avatar
+        userId: userData.id
       }
       cb(null, data)
     } catch (err) {
@@ -21,8 +19,10 @@ const userServices = {
     }
   },
   signUp: (req, cb) => {
-    const { email, password, confirmPassword } = req.body
+    const { email, storeName, password, confirmPassword } = req.body
+    if (!email || !storeName || !password) throw new Error('必須輸入所有欄位')
     if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
+    if (storeName.length > 50) throw new Error('商家名稱不可超過50字')
     User.findOne({
       where: { email }
     })
@@ -34,8 +34,8 @@ const userServices = {
         return User.create({
           email,
           password: hash,
-          nickname: '匿名',
-          role: 'user'
+          storeName,
+          role: 'owner'
         })
       })
       .then(user => {
@@ -46,16 +46,15 @@ const userServices = {
           message: '註冊成功',
           token,
           userId: userData.id,
-          avatar: userData.avatar
         }
         cb(null, data)
       })
       .catch(err => cb(err))
   },
-  getUser: (req, cb) => {
+  getOwner: (req, cb) => {
     return User.findByPk(helpers.getUser(req).id, {
       raw: true,
-      attributes: ['id', 'email', 'nickname', 'avatar']
+      attributes: ['id', 'email', 'storeName']
     })
       .then(user => {
         cb(null, user)
@@ -64,30 +63,18 @@ const userServices = {
   },
   putAccount: (req, cb) => {
     try {
-      const { email, nickname } = req.body
-      const { file } = req
-      if (nickname.length > 50) throw new Error('暱稱名稱不可超過50字')
+      const { email, storeName } = req.body
+      if (storeName.length > 50) throw new Error('商家名稱不可超過50字')
       return Promise.all([
         User.findOne({ where: { email }, raw: true }),
         User.findByPk(helpers.getUser(req).id)
       ])
         .then(([emailUser, user]) => {
           if (emailUser && emailUser.email !== helpers.getUser(req).email) throw new Error('email已重複註冊')
-          if (JSON.stringify(file) !== '{}' && file !== undefined) {
-            return imgurFileHandler(file)
-              .then(avatarFilePath => {
-                return user.update({
-                  email,
-                  nickname,
-                  avatar: avatarFilePath || user.avatar
-                })
-              })
-          } else {
-            return user.update({
-              email,
-              nickname
-            })
-          }
+          return user.update({
+            email,
+            storeName
+          })
         })
         .then(updatedUser => {
           cb(null, { message: '更新成功' })
@@ -113,7 +100,7 @@ const userServices = {
         return cb(null, { message: '更新成功' })
       })
       .catch(err => cb(err))
-  }
+  },
 }
 
-module.exports = userServices
+module.exports = ownerServices
