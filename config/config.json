@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "Ss6450065",
-    "database": "i_sport_workplace_test",
+    "database": "i_sport_workplace",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false
