@@ -14,6 +14,9 @@ module.exports = {
       plan_id: {
         type: Sequelize.INTEGER
       },
+      store_id: {
+        type: Sequelize.INTEGER
+      },
       amount_left: {
         type: Sequelize.INTEGER
       },

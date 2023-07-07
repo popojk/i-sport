@@ -15,6 +15,9 @@ const ownerController = {
   },
   putPassword: (req, res, next) => {
     ownerServices.putPassword(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getStores: (req, res, next) => {
+    ownerServices.getStores(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

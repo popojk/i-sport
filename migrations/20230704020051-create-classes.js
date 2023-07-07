@@ -11,6 +11,9 @@ module.exports = {
       date: {
         type: Sequelize.DATE
       },
+      start_date_time: {
+        type: Sequelize.DATE
+      },
       store_id: {
         type: Sequelize.INTEGER
       },

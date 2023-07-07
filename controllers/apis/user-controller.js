@@ -15,6 +15,15 @@ const userController = {
   },
   putPassword: (req, res, next) => {
     userServices.putPassword(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getUserPlans: (req, res, next) => {
+    userServices.getUserPlans(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getUserCollections: (req, res, next) => {
+    userServices.getUserCollections(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getUserReservations: (req, res, next) => {
+    userServices.getUserReservations(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
+const { User, Store } = require('../models')
+const sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 const helpers = require('../_helpers')
 
@@ -11,7 +12,8 @@ const ownerServices = {
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
       const data = {
         token,
-        userId: userData.id
+        userId: userData.id,
+        role: userData.role
       }
       cb(null, data)
     } catch (err) {
@@ -98,6 +100,21 @@ const ownerServices = {
       })
       .then(() => {
         return cb(null, { message: '更新成功' })
+      })
+      .catch(err => cb(err))
+  },
+  getStores: (req, cb) => {
+    return Store.findAll({
+      where: { userId: helpers.getUser(req).id },
+      raw: true,
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction',
+        [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
+        [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating']
+      ]
+    })
+      .then(stores => {
+        if (stores.length === 0) throw new Error('沒有建立之場館')
+        return cb(null, stores)
       })
       .catch(err => cb(err))
   }

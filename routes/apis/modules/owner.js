@@ -7,5 +7,6 @@ router.post('/users', ownerController.signUp)
 router.get('/users/account', authenticated, authenticatedOwner, ownerController.getOwner)
 router.put('/users/account', authenticated, authenticatedOwner, ownerController.putAccount)
 router.put('/users/password', authenticated, authenticatedOwner, ownerController.putPassword)
+router.get('/stores', authenticated, authenticatedOwner, ownerController.getStores)
 
 module.exports = router
