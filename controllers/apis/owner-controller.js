@@ -22,6 +22,15 @@ const ownerController = {
   postStore: (req, res, next) => {
     ownerServices.postStore(req, (err, data) => err ? next(err) : res.json(data))
   },
+  putStore: (req, res, next) => {
+    ownerServices.putStore(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getStore: (req, res, next) => {
+    ownerServices.getStore(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getClassSchedules: (req, res, next) => {
+    ownerServices.getClassSchedules(req, (err, data) => err ? next(err) : res.json(data))
+  }
 }
 
 module.exports = ownerController
