@@ -3,6 +3,7 @@ const { User, Store } = require('../models')
 const sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 const helpers = require('../_helpers')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const ownerServices = {
   signIn: (req, cb) => {
@@ -117,7 +118,32 @@ const ownerServices = {
         return cb(null, stores)
       })
       .catch(err => cb(err))
-  }
+  },
+  postStore: (req, cb) => {
+    const { storeName, address, introduction, phone, email } = req.body
+    const { file } = req
+    if (!storeName || !address || !introduction || !phone || !email || !file) throw new Error('所有欄位必須輸入')
+    if (storeName.length > 50) throw new Error('場館名稱不可超過50字元')
+    if (address.length > 100) throw new Error('地址不可超過100字元')
+    if (introduction.length > 300) throw new Error('場館介紹不可超過300字元')
+    if (phone.length > 100) throw new Error('電話不可超過100字元')
+    return imgurFileHandler(file)
+      .then(photoFilePath => {
+        if (!photoFilePath) throw new Error('照片上傳失敗')
+        return Store.create({
+          email,
+          storeName,
+          address,
+          introduction,
+          phone,
+          photo: photoFilePath
+        })
+      })
+      .then(() => {
+        return cb(null, '場館建立完成')
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = ownerServices
