@@ -13,5 +13,6 @@ router.post('/stores', authenticated, authenticatedOwner, upload.single('photo')
 router.put('/stores/:store_id', authenticated, authenticatedOwner, upload.single('photo'), ownerController.putStore)
 router.get('/stores/:store_id', authenticated, authenticatedOwner, ownerController.getStore)
 router.get('/stores/:store_id/classes', authenticated, authenticatedOwner, ownerController.getClassSchedules)
+router.post('/stores/:store_id/classes', authenticated, authenticatedOwner, ownerController.postClassSchedules)
 
 module.exports = router

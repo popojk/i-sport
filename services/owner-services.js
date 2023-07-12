@@ -232,11 +232,38 @@ const ownerServices = {
       attributes: ['id', 'weekDay', 'className', 'startTime', 'endTime', 'headCount']
     })
       .then(schedules => {
+        if (schedules.length === 0) throw new Error('場館無課表')
         const data = schedules.map(schedule => {
           delete schedule.Store
           return schedule
         })
         return cb(null, data)
+      })
+      .catch(err => cb(err))
+  },
+  postClassSchedules: (req, cb) => {
+    const { weekDay, className, headcount, startTime, endTime } = req.body
+    if (!weekDay || !className || !headcount || !startTime || !endTime) throw new Error('所有欄位必須輸入')
+    if (className.length > 50) throw new Error('課程名稱不可超過50字元')
+    const weekDays = {
+      星期日: 0,
+      星期一: 1,
+      星期二: 2,
+      星期三: 3,
+      星期四: 4,
+      星期五: 5,
+      星期六: 6
+    }
+    return ClassSchedule.create({
+      weekDay: weekDays[weekDay],
+      className,
+      headcount,
+      startTime,
+      endTime,
+      storeId: req.params.store_id
+    })
+      .then(() => {
+        cb(null, '課表新增成功')
       })
       .catch(err => cb(err))
   }

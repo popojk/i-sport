@@ -30,6 +30,9 @@ const ownerController = {
   },
   getClassSchedules: (req, res, next) => {
     ownerServices.getClassSchedules(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  postClassSchedules: (req, res, next) => {
+    ownerServices.postClassSchedules(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 
