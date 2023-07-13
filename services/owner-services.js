@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Store, ClassSchedule, Plan } = require('../models')
+const { User, Store, ClassSchedule, Plan, Review } = require('../models')
 const sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 const helpers = require('../_helpers')
@@ -358,6 +358,76 @@ const ownerServices = {
     })
       .then(() => {
         return cb(null, '方案新增成功')
+      })
+      .catch(err => cb(err))
+  },
+  putStorePlan: (req, cb) => {
+    const { planName, planType, planAmount, price } = req.body
+    if (!planName || !planType || !planAmount || !price) throw new Error('所有欄位必須輸入')
+    if (planName.length > 50) throw new Error('方案名稱不可超過50字元')
+    return Plan.findOne({
+      where: [{ id: req.params.plan_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      }
+    })
+      .then(plan => {
+        if (!plan) throw new Error('方案不存在')
+        return plan.update({
+          planName,
+          planType,
+          planAmount,
+          price
+        })
+      })
+      .then(() => {
+        return cb(null, '方案更新成功')
+      })
+      .catch(err => cb(err))
+  },
+  deleteStorePlan: (req, cb) => {
+    return Plan.findOne({
+      where: [{ id: req.params.plan_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      }
+    })
+      .then(plan => {
+        if (!plan) throw new Error('方案不存在')
+        return plan.destroy()
+      })
+      .then(() => {
+        return cb(null, '方案刪除成功')
+      })
+      .catch(err => cb(err))
+  },
+  getStoreReviews: (req, cb) => {
+    return Review.findAll({
+      where: [{ store_id: req.params.store_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      },
+      attributes: ['id', 'createdAt', 'rating', 'content',
+        [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
+        [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
+      ],
+      raw: true,
+      nest: true
+    })
+      .then(reviews => {
+        if (reviews.length === 0) throw new Error('商家無評價')
+        const data = reviews.map(review => {
+          delete review.Store
+          review.createdAt = `${review.createdAt.getFullYear()}-${review.createdAt.getMonth() + 1}-${review.createdAt.getDate()}`
+          return review
+        })
+        return cb(null, data)
       })
       .catch(err => cb(err))
   }

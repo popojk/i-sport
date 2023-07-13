@@ -45,6 +45,15 @@ const ownerController = {
   },
   postStorePlans: (req, res, next) => {
     ownerServices.postStorePlans(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  putStorePlan: (req, res, next) => {
+    ownerServices.putStorePlan(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  deleteStorePlan: (req, res, next) => {
+    ownerServices.deleteStorePlan(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getStoreReviews: (req, res, next) => {
+    ownerServices.getStoreReviews(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 
