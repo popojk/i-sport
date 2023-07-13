@@ -156,33 +156,40 @@ const userServices = {
         })
         .catch(err => cb(err))
     } else {
-      return UserPlan.findAll({
-        where: {
-          [Op.or]: [
-            [{ user_id: helpers.getUser(req).id },
-              { amount_left: { [Op.gt]: 0 } }],
-            [{ user_id: helpers.getUser(req).id },
-              { expire_date: { [Op.gt]: new Date() } }]
+      return Store.findAll({
+        where: [{ '$UserPlans.user_id$': helpers.getUser(req).id }],
+        include: {
+          model: UserPlan,
+          as: 'UserPlans',
+          where: {
+            [Op.or]: [
+              [{ amount_left: { [Op.gt]: 0 } }],
+              [{ expire_date: { [Op.gt]: new Date() } }]
+            ]
+          },
+          attributes: ['id', 'amountLeft', 'expireDate',
+            [sequelize.literal('(SELECT plan_name FROM Plans WHERE Plans.id = UserPlans.plan_id)'), 'planName'],
+            [sequelize.literal('(SELECT plan_type FROM Plans WHERE Plans.id = UserPlans.plan_id)'), 'planType'],
+            [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = UserPlans.store_id)'), 'StoreName']
           ]
         },
-        attributes: ['id', 'amountLeft',
-          [sequelize.literal('(SELECT plan_name FROM Plans WHERE Plans.id = UserPlan.plan_id)'), 'planName'],
-          [sequelize.literal('(SELECT plan_type FROM Plans WHERE Plans.id = UserPlan.plan_id)'), 'planType']
-        ],
-        raw: true
+        attributes: [['id', 'storeId'], 'storeName'],
+        nest: true
       })
-        .then(userPlans => {
-          if (userPlans.length === 0) throw new Error('目前無有效方案')
-          const data = userPlans.map(userPlan => {
-            if (userPlan.planType === '天數') {
-              const expireDate = userPlan.expireDate
-              const today = new Date()
-              const diffInMilliseconds = Math.abs(expireDate - today)
-              const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
-              userPlan.amountLeft = diffInDays
-              return userPlan
-            }
-            return userPlan
+        .then(stores => {
+          const data = stores.map(store => {
+            store.Plans = store.UserPlans.map(plan => {
+              if (plan.planType === '天數') {
+                const expireDate = plan.expireDate
+                const today = new Date()
+                const diffInMilliseconds = Math.abs(expireDate - today)
+                const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
+                plan.amountLeft = diffInDays
+                return plan
+              }
+              return plan
+            })
+            return store
           })
           return cb(null, data)
         })
