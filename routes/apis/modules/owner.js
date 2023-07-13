@@ -16,5 +16,6 @@ router.get('/stores/:store_id/classes', authenticated, authenticatedOwner, owner
 router.post('/stores/:store_id/classes', authenticated, authenticatedOwner, ownerController.postClassSchedules)
 router.put('/classes/:schedule_id', authenticated, authenticatedOwner, ownerController.putClassSchedule)
 router.delete('/classes/:schedule_id', authenticated, authenticatedOwner, ownerController.deleteClassSchedule)
+router.get('/stores/:store_id/plans', authenticated, authenticatedOwner, ownerController.getStorePlans)
 
 module.exports = router

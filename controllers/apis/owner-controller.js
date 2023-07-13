@@ -39,6 +39,9 @@ const ownerController = {
   },
   deleteClassSchedule: (req, res, next) => {
     ownerServices.deleteClassSchedule(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  getStorePlans: (req, res, next) => {
+    ownerServices.getStorePlans(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 

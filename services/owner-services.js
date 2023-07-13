@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Store, ClassSchedule } = require('../models')
+const { User, Store, ClassSchedule, Plan } = require('../models')
 const sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 const helpers = require('../_helpers')
@@ -322,6 +322,28 @@ const ownerServices = {
       })
       .catch(err => cb(err))
   },
+  getStorePlans: (req, cb) => {
+    return Plan.findAll({
+      where: [{ store_id: req.params.store_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      },
+      attributes: ['id', 'planName', 'planAmount', 'price', 'planType'],
+      raw: true,
+      nest: true
+    })
+      .then(plans => {
+        if (plans.length === 0) throw new Error('場館無方案')
+        const data = plans.map(plan => {
+          delete plan.Store
+          return plan
+        })
+        return cb(null, data)
+      })
+      .catch(err => cb(err))
+  }
 }
 
 module.exports = ownerServices
