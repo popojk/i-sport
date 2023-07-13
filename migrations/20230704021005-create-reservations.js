@@ -14,6 +14,12 @@ module.exports = {
       class_id: {
         type: Sequelize.INTEGER
       },
+      remark: {
+        type: Sequelize.STRING
+      },
+      user_plan_id: {
+        type: Sequelize.INTEGER
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -2,6 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Class = sequelize.define('Class', {
     date: DataTypes.DATE,
+    startDateTime: DataTypes.DATE,
     storeId: DataTypes.INTEGER,
     classScheduleId: DataTypes.INTEGER
   }, {

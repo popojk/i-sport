@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'ClassSchedule',
-    tableName: 'ClassSchedules',
+    tableName: 'Class_schedules',
     underscored: true
   })
   ClassSchedule.associate = function (models) {

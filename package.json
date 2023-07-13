@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=development node app.js",
+    "prestart": "node_modules/sequelize-cli/lib/sequelize db:migrate:undo:all & node_modules/sequelize-cli/lib/sequelize db:migrate && node_modules/sequelize-cli/lib/sequelize db:seed:undo:all && node_modules/sequelize-cli/lib/sequelize db:seed:all",
+    "start": "node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "prod": "NODE_ENV=production nodemon app.js",
     "test": "mocha test --exit --recursive --timeout 5000",
@@ -33,11 +34,11 @@
     "mocha": "^6.0.2",
     "multer": "^1.4.3",
     "mysql2": "^1.6.4",
+    "sequelize-cli": "^5.5.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "sequelize": "^6.18.0",
-    "sequelize-cli": "^5.5.0",
     "sinon": "^10.0.0",
     "sinon-chai": "^3.3.0"
   }

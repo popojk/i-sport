@@ -8,5 +8,8 @@ router.post('/', userController.signUp)
 router.get('/account', authenticated, authenticatedUser, userController.getUser)
 router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), userController.putAccount)
 router.put('/password', authenticated, authenticatedUser, userController.putPassword)
+router.get('/plans', authenticated, authenticatedUser, userController.getUserPlans)
+router.get('/like_stores', authenticated, authenticatedUser, userController.getUserCollections)
+router.get('/reservations', authenticated, authenticatedUser, userController.getUserReservations)
 
 module.exports = router
