@@ -266,7 +266,62 @@ const ownerServices = {
         cb(null, '課表新增成功')
       })
       .catch(err => cb(err))
-  }
+  },
+  putClassSchedule: (req, cb) => {
+    const { weekDay, className, headcount, startTime, endTime } = req.body
+    if (!weekDay || !className || !headcount || !startTime || !endTime) throw new Error('所有欄位必須輸入')
+    if (className.length > 50) throw new Error('課程名稱不可超過50字元')
+    const weekDays = {
+      星期日: 0,
+      星期一: 1,
+      星期二: 2,
+      星期三: 3,
+      星期四: 4,
+      星期五: 5,
+      星期六: 6
+    }
+    return ClassSchedule.findOne({
+      where: [{ id: req.params.schedule_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      }
+    })
+      .then(schedule => {
+        if (!schedule) throw new Error('課表不存在')
+        return schedule.update({
+          weekDay: weekDays[weekDay],
+          className,
+          headcount,
+          startTime,
+          endTime,
+          storeId: req.params.store_id
+        })
+      })
+      .then(() => {
+        return cb(null, '更新成功')
+      })
+      .catch(err => cb(err))
+  },
+  deleteClassSchedule: (req, cb) => {
+    return ClassSchedule.findOne({
+      where: [{ id: req.params.schedule_id },
+        { '$Store.user_id$': helpers.getUser(req).id }],
+      include: {
+        model: Store,
+        as: 'Store'
+      }
+    })
+      .then(schedule => {
+        if (!schedule) throw new Error('課表不存在')
+        return schedule.destroy()
+      })
+      .then(() => {
+        return cb(null, '課表刪除成功')
+      })
+      .catch(err => cb(err))
+  },
 }
 
 module.exports = ownerServices

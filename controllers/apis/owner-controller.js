@@ -33,6 +33,12 @@ const ownerController = {
   },
   postClassSchedules: (req, res, next) => {
     ownerServices.postClassSchedules(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  putClassSchedule: (req, res, next) => {
+    ownerServices.putClassSchedule(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  deleteClassSchedule: (req, res, next) => {
+    ownerServices.deleteClassSchedule(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 
