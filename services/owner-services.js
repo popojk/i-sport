@@ -331,6 +331,7 @@ const ownerServices = {
         as: 'Store'
       },
       attributes: ['id', 'planName', 'planAmount', 'price', 'planType'],
+      order: [['price', 'ASC']],
       raw: true,
       nest: true
     })
@@ -341,6 +342,22 @@ const ownerServices = {
           return plan
         })
         return cb(null, data)
+      })
+      .catch(err => cb(err))
+  },
+  postStorePlans: (req, cb) => {
+    const { planName, planType, planAmount, price } = req.body
+    if (!planName || !planType || !planAmount || !price) throw new Error('所有欄位必須輸入')
+    if (planName.length > 50) throw new Error('方案名稱不可超過50字元')
+    return Plan.create({
+      planName,
+      planType,
+      planAmount,
+      price,
+      storeId: req.params.store_id
+    })
+      .then(() => {
+        return cb(null, '方案新增成功')
       })
       .catch(err => cb(err))
   }

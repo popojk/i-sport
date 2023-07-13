@@ -42,6 +42,9 @@ const ownerController = {
   },
   getStorePlans: (req, res, next) => {
     ownerServices.getStorePlans(req, (err, data) => err ? next(err) : res.json(data))
+  },
+  postStorePlans: (req, res, next) => {
+    ownerServices.postStorePlans(req, (err, data) => err ? next(err) : res.json(data))
   }
 }
 
