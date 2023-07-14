@@ -7,7 +7,7 @@ module.exports = {
       email: 'user1@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user1',
-      avatar: 'https://imgur.com/5OL5wJt.png',
+      avatar: 'https://i.imgur.com/EgMXcng.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()
@@ -15,7 +15,7 @@ module.exports = {
       email: 'user2@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user2',
-      avatar: 'https://imgur.com/5OL5wJt.png',
+      avatar: 'https://i.imgur.com/AD3MbBi.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()
@@ -23,7 +23,7 @@ module.exports = {
       email: 'user3@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user3',
-      avatar: 'https://imgur.com/5OL5wJt.png',
+      avatar: 'https://i.imgur.com/Jvh1OQm.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()
@@ -31,7 +31,7 @@ module.exports = {
       email: 'user4@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user4',
-      avatar: 'https://imgur.com/5OL5wJt.png',
+      avatar: 'https://i.imgur.com/jlFgGpe.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()
@@ -39,7 +39,7 @@ module.exports = {
       email: 'user5@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user5',
-      avatar: 'https://imgur.com/5OL5wJt.png',
+      avatar: 'https://i.imgur.com/TEMGYjY.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()
