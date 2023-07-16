@@ -28,12 +28,13 @@ const storeServices = {
       raw: true,
       attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'phone', 'email',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
-        [sequelize.literal('(SELECT AVG (rating) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
+        [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']
       ]
     })
       .then(store => {
         if (!store) throw new Error('場館不存在')
+        store.isLiked = store.isLiked === 1
         return cb(null, store)
       })
       .catch(err => cb(err))

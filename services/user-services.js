@@ -8,6 +8,7 @@ const helpers = require('../_helpers')
 
 const userServices = {
   signIn: (req, cb) => {
+    // #swagger.tags = ['Users']
     try {
       const userData = req.user.toJSON()
       delete userData.password
@@ -229,8 +230,10 @@ const userServices = {
       include: {
         model: Class,
         as: 'Class',
-        attributes: ['id', 'date',
+        attributes: ['date',
+          [sequelize.literal('(SELECT id FROM Stores WHERE Stores.id = Class.store_id)'), 'storeId'],
           [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = Class.store_id)'), 'storeName'],
+          [sequelize.literal('(SELECT class_name FROM Class_schedules WHERE Class_schedules.id = Class.class_schedule_id)'), 'className'],
           [sequelize.literal('(SELECT start_time FROM Class_schedules WHERE Class_schedules.id = Class.class_schedule_id)'), 'startTime'],
           [sequelize.literal('(SELECT end_time FROM Class_schedules WHERE Class_schedules.id = Class.class_schedule_id)'), 'endTime'],
           [sequelize.literal('(SELECT week_day FROM Class_schedules WHERE Class_schedules.id = Class.class_schedule_id)'), 'weekDay']
@@ -245,6 +248,7 @@ const userServices = {
         const weekDays = ['日', '一', '二', '三', '四', '五', '六']
         const classesData = reservations.map(reservation => {
           const data = reservation.Class
+          data.reservationId = reservation.id
           data.date = `${data.date.getFullYear()}-${data.date.getMonth() + 1}-${data.date.getDate()}`
           data.weekDay = weekDays[data.weekDay]
           return data

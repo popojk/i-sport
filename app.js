@@ -1,6 +1,8 @@
 require('dotenv').config()
 const path = require('path')
 const express = require('express')
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./swagger_output.json')
 const passport = require('./config/passport')
 const cors = require('cors')
 const { apis } = require('./routes')
@@ -18,7 +20,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-
+app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(passport.initialize())
