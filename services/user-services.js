@@ -71,6 +71,7 @@ const userServices = {
     try {
       const { email, nickname } = req.body
       const { file } = req
+      if (!nickname) throw new Error('暱稱不可為空值')
       if (nickname.length > 50) throw new Error('暱稱名稱不可超過50字')
       return Promise.all([
         User.findOne({ where: { email }, raw: true }),

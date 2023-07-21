@@ -4,6 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     photo: DataTypes.STRING,
     address: DataTypes.STRING,
     introduction: DataTypes.STRING,
+    lat: DataTypes.DOUBLE,
+    lng: DataTypes.DOUBLE,
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     storeName: DataTypes.STRING,
@@ -22,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     Store.hasMany(models.Plan, { foreignKey: 'storeId' })
     Store.hasMany(models.ClassSchedule, { foreignKey: 'storeId' })
     Store.hasMany(models.UserPlan, { foreignKey: 'storeId' })
+    Store.hasMany(models.Order, { foreignKey: 'storeId' })
   }
   return Store
 }

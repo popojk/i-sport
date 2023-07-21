@@ -7,7 +7,7 @@ const storeServices = {
     const userId = helpers.getUser(req).id
     return Store.findAll({
       raw: true,
-      attributes: ['id', 'storeName', 'photo', 'address', 'introduction',
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']
@@ -26,7 +26,7 @@ const storeServices = {
     const userId = helpers.getUser(req).id
     return Store.findByPk(req.params.store_id, {
       raw: true,
-      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'phone', 'email',
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'phone', 'email', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']

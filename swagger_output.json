@@ -217,6 +217,112 @@
           }
         }
       },
+      "GetStoreReviewsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          }
+        }
+      },
+      "PostReviewBody": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      },
+      "PostReviewResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PostLikeAndUnlikeResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PutPasswordBody": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "PutPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GetUserPlansResponse": {
+        "type": "object",
+        "properties": {
+          "storeId": {
+            "type": "number"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "UserPlans": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "amountLeft": {
+                "type": "number"
+              },
+              "expireDate": {
+                "type": "string"
+              },
+              "planName": {
+                "type": "string"
+              },
+              "planType": {
+                "type": "string"
+              },
+              "storeName": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -365,6 +471,106 @@
         }
       }
     },
+    "/api/users/password": {
+      "put": {
+        "description": "User amend password",
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "description": "兩次密碼不同回傳'第二次輸入密碼有誤'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutPasswordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PutPasswordResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/plans": {
+      "get": {
+        "description": "User get plans",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "如無有效方案時回傳'目前無有效方案'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserPlansResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/like_stores": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/api/users/reservations": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/api/stores": {
       "get": {
         "description": "get all stores in user main page",
@@ -505,7 +711,10 @@
     },
     "/api/stores/{store_id}/reviews": {
       "get": {
-        "description": "",
+        "description": "User get store reviews",
+        "tags": [
+          "Stores"
+        ],
         "parameters": [
           {
             "name": "store_id",
@@ -516,18 +725,31 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "如無商家無方案時回傳'商家無評價'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStoreReviewsResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
       "post": {
-        "description": "",
+        "description": "User post review to store",
+        "tags": [
+          "Stores"
+        ],
         "parameters": [
           {
             "name": "store_id",
@@ -536,22 +758,46 @@
             "type": "string"
           }
         ],
+        "requestBody": {
+          "description": "如沒有輸入評價或評論時回傳'必須輸入評價或評論'，如評論超過100字元回傳'評論不可超過100字元'，store_id不存在時回傳'場館不存在'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReviewBody"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "如無商家無方案時回傳'商家無評價'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostReviewResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/stores/{store_id}/like": {
       "post": {
-        "description": "",
+        "description": "User like a store",
+        "tags": [
+          "Stores"
+        ],
         "parameters": [
           {
             "name": "store_id",
@@ -562,20 +808,33 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "store_id不存在時回傳'場館不存在'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostLikeAndUnlikeResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/stores/{store_id}/unlike": {
       "post": {
-        "description": "",
+        "description": "User unlike a store",
+        "tags": [
+          "Stores"
+        ],
         "parameters": [
           {
             "name": "store_id",
@@ -586,13 +845,23 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "store_id不存在時回傳'場館不存在'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostLikeAndUnlikeResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -937,71 +1206,6 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    
-    "/api/users/password": {
-      "put": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/users/plans": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/users/like_stores": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/users/reservations": {
-      "get": {
-        "description": "",
         "responses": {
           "200": {
             "description": "OK"

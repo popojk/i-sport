@@ -127,7 +127,15 @@ const ownerServices = {
     if (address.length > 100) throw new Error('地址不可超過100字元')
     if (introduction.length > 300) throw new Error('場館介紹不可超過300字元')
     if (phone.length > 100) throw new Error('電話不可超過100字元')
-    return imgurFileHandler(file)
+    return Promise.all([
+      Store.findOne({ where: { storeName } }),
+      Store.findOne({ where: { address } })
+    ])
+      .then(([nameStore, addressStore]) => {
+        if (nameStore) throw new Error('場館名稱已被使用')
+        if (addressStore) throw new Error('場館地址已被使用')
+        return imgurFileHandler(file)
+      })
       .then(photoFilePath => {
         if (!photoFilePath) throw new Error('照片上傳失敗')
         return Store.create({
@@ -140,29 +148,37 @@ const ownerServices = {
           userId: helpers.getUser(req).id
         })
       })
-      .then(() => {
-        return cb(null, '場館建立完成')
+      .then(store => {
+        return cb(null, { id: store.id })
       })
       .catch(err => cb(err))
   },
   putStore: (req, cb) => {
     const { storeName, address, introduction, phone, email } = req.body
     const { file } = req
-    if (!storeName || !address || !introduction || !phone || !email || !file) throw new Error('所有欄位必須輸入')
+    if (!storeName || !address || !introduction || !phone || !email) throw new Error('所有欄位必須輸入')
     if (storeName.length > 50) throw new Error('場館名稱不可超過50字元')
     if (address.length > 100) throw new Error('地址不可超過100字元')
     if (introduction.length > 300) throw new Error('場館介紹不可超過300字元')
     if (phone.length > 100) throw new Error('電話不可超過100字元')
     if (JSON.stringify(file) !== '{}' && file !== undefined) {
       return Promise.all([
-        Store.findOne({
-          where: {
-            id: req.params.store_id,
-            userId: helpers.getUser(req).id
-          }
-        }),
-        imgurFileHandler(file)
+        Store.findOne({ where: { storeName } }),
+        Store.findOne({ where: { address } })
       ])
+        .then(([nameStore, addressStore]) => {
+          if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
+          if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
+          return Promise.all([
+            Store.findOne({
+              where: {
+                id: req.params.store_id,
+                userId: helpers.getUser(req).id
+              }
+            }),
+            imgurFileHandler(file)
+          ])
+        })
         .then(([store, photoFilePath]) => {
           if (!store) throw new Error('場館不存在')
           if (!photoFilePath) throw new Error('照片上傳失敗')
@@ -180,10 +196,20 @@ const ownerServices = {
         })
         .catch(err => cb(err))
     } else {
-      return Store.findOne({
-        id: req.params.store_id,
-        userId: helpers.getUser(req).id
-      })
+      return Promise.all([
+        Store.findOne({ where: { storeName } }),
+        Store.findOne({ where: { address } })
+      ])
+        .then(([nameStore, addressStore]) => {
+          if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
+          if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
+          return Store.findOne({
+            where: {
+              id: req.params.store_id,
+              userId: helpers.getUser(req).id
+            }
+          })
+        })
         .then(store => {
           if (!store) throw new Error('場館不存在')
           return store.update({

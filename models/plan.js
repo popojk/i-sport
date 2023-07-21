@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   Plan.associate = function (models) {
     Plan.belongsTo(models.Store, { foreignKey: 'storeId' })
     Plan.hasMany(models.UserPlan, { foreignKey: 'planId' })
+    Plan.hasMany(models.Order, { foreignKey: 'planId' })
   }
   return Plan
 }
