@@ -255,7 +255,7 @@ const ownerServices = {
         as: 'Store'
       },
       order: [['week_day', 'ASC']],
-      attributes: ['id', 'weekDay', 'className', 'startTime', 'endTime', 'headCount']
+      attributes: ['id', 'weekDay', 'className', 'startTime', 'endTime', 'headcount']
     })
       .then(schedules => {
         if (schedules.length === 0) throw new Error('場館無課表')
@@ -288,8 +288,8 @@ const ownerServices = {
       endTime,
       storeId: req.params.store_id
     })
-      .then(() => {
-        cb(null, '課表新增成功')
+      .then(schedule => {
+        cb(null, { id: schedule.id })
       })
       .catch(err => cb(err))
   },
