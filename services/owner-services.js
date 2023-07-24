@@ -254,7 +254,7 @@ const ownerServices = {
         model: Store,
         as: 'Store'
       },
-      order: [['week_day', 'ASC']],
+      order: [['week_day', 'ASC'], ['startTime', 'ASC']],
       attributes: ['id', 'weekDay', 'className', 'startTime', 'endTime', 'headcount']
     })
       .then(schedules => {
@@ -382,8 +382,8 @@ const ownerServices = {
       price,
       storeId: req.params.store_id
     })
-      .then(() => {
-        return cb(null, '方案新增成功')
+      .then(plan => {
+        return cb(null, { id: plan.id })
       })
       .catch(err => cb(err))
   },
@@ -443,6 +443,7 @@ const ownerServices = {
         [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
         [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
       ],
+      order: [['id', 'DESC']],
       raw: true,
       nest: true
     })

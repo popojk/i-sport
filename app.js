@@ -13,7 +13,9 @@ const corsOptions = {
   origin: [
     // frontend url
     'http://localhost:3000',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://isport-beginneraboutlife116.vercel.app',
+    'https://isport-omega.vercel.app'
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization']

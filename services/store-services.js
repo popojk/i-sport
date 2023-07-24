@@ -179,7 +179,8 @@ const storeServices = {
       attributes: ['id', 'createdAt', 'rating', 'content',
         [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
         [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
-      ]
+      ],
+      order: [['id', 'DESC']]
     })
       .then(reviews => {
         if (reviews.length === 0) throw new Error('商家無評價')

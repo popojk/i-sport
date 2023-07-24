@@ -6,6 +6,7 @@ const orderServices = {
   postOrder: (req, cb) => {
     try {
       const { Amt, planId, planName, storeId } = req.body
+      const URL = process.env.URL
       const HashKey = process.env.NEWPAY_HASHKEY
       const HashIV = process.env.NEWPAY_HASHIV
       const MerchantId = process.env.NEWPAY_MERCHANT_ID
@@ -13,7 +14,8 @@ const orderServices = {
       const TimeStamp = new Date().getTime()
       const Version = '2.0'
       const MerchantOrderNo = ulid()
-      const NotifyURL = 'http://i-sport-api-env-1.eba-yaqmmn4t.ap-northeast-2.elasticbeanstalk.com/api/orders/newpaycallback'
+      const ReturnURL = 'https://isport-omega.vercel.app/find'
+      const NotifyURL = `${URL}/api/orders/newpaycallback`
 
       const results = []
       results.push(`MerchantID=${MerchantId}`)
@@ -23,6 +25,7 @@ const orderServices = {
       results.push(`MerchantOrderNo=${MerchantOrderNo}`)
       results.push(`Amt=${Amt}`)
       results.push(`ItemDesc=storeId:${storeId}&planId:${planId}&${planName}`)
+      results.push(`ReturnURL=${ReturnURL}`)
       results.push(`NotifyURL=${NotifyURL}`)
 
       const encryptParams = crypto.createCipheriv('aes256', HashKey, HashIV)
@@ -43,6 +46,8 @@ const orderServices = {
   },
   newpayCallBack: (req, cb) => {
     try {
+      console.log(req)
+      console.log(req.body)
       const data = decryptTradeInfo(req.body.TradeInfo)
       return cb(null, data)
     } catch (err) {
