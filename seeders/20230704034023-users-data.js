@@ -15,7 +15,7 @@ module.exports = {
       email: 'user2@example.com',
       password: await bcrypt.hash('12345678', 10),
       nickname: 'user2',
-      avatar: 'https://i.imgur.com/AD3MbBi.jpeg',
+      avatar: 'https://i.imgur.com/lJJZVRv.jpeg',
       role: 'user',
       created_at: new Date(),
       updated_at: new Date()

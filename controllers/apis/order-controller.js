@@ -6,7 +6,7 @@ const orderController = {
   },
   newpayCallBack: (req, res, next) => {
     orderServices.newpayCallBack(req, (err, data) => err ? next(err) : res.json(data))
-  },
+  }
 }
 
 module.exports = orderController

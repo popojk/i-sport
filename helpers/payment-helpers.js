@@ -18,5 +18,5 @@ const decryptTradeInfo = TradeInfo => {
 }
 
 module.exports = {
-  decryptTradeInfo,
+  decryptTradeInfo
 }

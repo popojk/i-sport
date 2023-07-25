@@ -108,7 +108,7 @@ const ownerServices = {
     return Store.findAll({
       where: { userId: helpers.getUser(req).id },
       raw: true,
-      attributes: ['id', 'storeName', 'photo', 'address', 'introduction',
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating']
       ]

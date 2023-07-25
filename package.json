@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "node_modules/sequelize-cli/lib/sequelize db:migrate && node_modules/sequelize-cli/lib/sequelize db:seed:undo:all && node_modules/sequelize-cli/lib/sequelize db:seed:all",
+    "prestart": "node_modules/sequelize-cli/lib/sequelize db:migrate:undo:all &&  node_modules/sequelize-cli/lib/sequelize db:migrate && node_modules/sequelize-cli/lib/sequelize db:seed:undo:all && node_modules/sequelize-cli/lib/sequelize db:seed:all",
     "start": "NODE_ENV=production node app.js",
     "dev": "NODE_ENV=development nodemon app.js",
     "prod": "NODE_ENV=production nodemon app.js",

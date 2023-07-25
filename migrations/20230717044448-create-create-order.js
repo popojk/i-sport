@@ -9,6 +9,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       trade_info: {
+        type: Sequelize.TEXT
+      },
+      order_no: {
         type: Sequelize.STRING
       },
       user_id: {
