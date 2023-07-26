@@ -11,7 +11,7 @@ module.exports = {
   },
   test: {
     username: 'root',
-    password: 'Ss6450065',
+    password: '96450065',
     database: 'i_sport_workplace',
     host: '127.0.0.1',
     dialect: 'mysql'

@@ -27,6 +27,14 @@ module.exports = {
         })
       }
     }
+    data.push({
+      user_id: userIds[0].id,
+      plan_id: planIds[1].id,
+      store_id: storeIds[0].store_id,
+      expire_date: new Date('10/8/2023'),
+      created_at: new Date(),
+      updated_at: new Date()
+    })
     queryInterface.bulkInsert('User_plans', data)
   },
   down: async (queryInterface, Sequelize) => {

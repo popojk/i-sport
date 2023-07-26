@@ -7,7 +7,7 @@ const storeServices = {
     const userId = helpers.getUser(req).id
     return Store.findAll({
       raw: true,
-      attributes: ['id', 'storeName', 'photo', 'address', 'introduction',
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']
@@ -26,14 +26,15 @@ const storeServices = {
     const userId = helpers.getUser(req).id
     return Store.findByPk(req.params.store_id, {
       raw: true,
-      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'phone', 'email',
+      attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'phone', 'email', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
-        [sequelize.literal('(SELECT AVG (rating) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
+        [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']
       ]
     })
       .then(store => {
         if (!store) throw new Error('場館不存在')
+        store.isLiked = store.isLiked === 1
         return cb(null, store)
       })
       .catch(err => cb(err))
@@ -178,7 +179,8 @@ const storeServices = {
       attributes: ['id', 'createdAt', 'rating', 'content',
         [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
         [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
-      ]
+      ],
+      order: [['id', 'DESC']]
     })
       .then(reviews => {
         if (reviews.length === 0) throw new Error('商家無評價')
