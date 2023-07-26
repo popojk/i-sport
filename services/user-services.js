@@ -147,7 +147,7 @@ const userServices = {
             if (userPlan.planType === '天數') {
               const expireDate = userPlan.expireDate
               const today = new Date()
-              const diffInMilliseconds = Math.abs(expireDate - today)
+              const diffInMilliseconds = Math.abs(expireDate.getTime() - today.getTime())
               const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
               userPlan.amountLeft = diffInDays
               return userPlan
@@ -175,16 +175,16 @@ const userServices = {
             [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = UserPlans.store_id)'), 'StoreName']
           ]
         },
-        attributes: [['id', 'storeId'], 'storeName'],
-        nest: true
+        attributes: [['id', 'storeId'], 'storeName']
       })
         .then(stores => {
           const data = stores.map(store => {
             store.Plans = store.UserPlans.map(plan => {
-              if (plan.planType === '天數') {
+              console.log(plan)
+              if (plan.dataValues.planType === '天數') {
                 const expireDate = plan.expireDate
                 const today = new Date()
-                const diffInMilliseconds = Math.abs(expireDate - today)
+                const diffInMilliseconds = Math.abs(expireDate.getTime() - today.getTime())
                 const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
                 plan.amountLeft = diffInDays
                 return plan

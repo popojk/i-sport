@@ -60,32 +60,39 @@ const orderServices = {
   },
   newpayCallBack: (req, cb) => {
     try {
-      const data = decryptTradeInfo(req.body.TradeInfo)
-      console.log(data)
+      const data = JSON.parse(decryptTradeInfo(req.body.TradeInfo))
+      const result = data.Result
+
       return Order.findOne({
-        where: { orderNo: data.MerchantOrderNo }
+        where: { orderNo: result.MerchantOrderNo }
       })
         .then(order => {
           if (!order) throw new Error('訂單號碼不存在')
-          return Plan.findByPk(order.planId)
-            .then(plan => {
-              let date = new Date()
-              return UserPlan.create({
-                userId: order.userId,
-                planId: order.planId,
-                storeId: order.storeId,
-                amountLeft: plan.planType === '次數' ? plan.planAmount : null,
-                expireDate: plan.planType === '天數' ? date.setDate(date.getDate() + plan.planAmount) : null
-              })
-                .then(userPlan => {
-                  console.log(userPlan)
+          // build user plan if transaction status was success
+          if (data.Status === 'SUCCESS') {
+            return Plan.findByPk(order.planId)
+              .then(plan => {
+                let date = new Date()
+                return UserPlan.create({
+                  userId: order.userId,
+                  planId: order.planId,
+                  storeId: order.storeId,
+                  amountLeft: plan.planType === '次數' ? plan.planAmount : null,
+                  expireDate: plan.planType === '天數' ? date.setDate(date.getDate() + plan.planAmount) : null
                 })
-                .catch(err => cb(err))
-            })
-            .then(() => {
-              return cb(null, '購買成功')
-            })
-            .catch(err => cb(err))
+                  .then(userPlan => {
+                    console.log(userPlan)
+                  })
+                  .catch(err => cb(err))
+              })
+              .then(() => {
+                return cb(null, '購買成功')
+              })
+              .catch(err => cb(err))
+            // return failure message if transaction failed
+          } else {
+            return cb(null, '交易失敗')
+          }
         })
         .catch(err => cb(err))
     } catch (err) {
