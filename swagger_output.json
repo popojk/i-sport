@@ -8,6 +8,7 @@
   },
   "host": "localhost:8080",
   "basePath": "/",
+  "defaultComponentsExpandDepth": -1,
   "tags": [
     {
       "name": "Users",
@@ -323,6 +324,510 @@
           }
         }
       },
+      "PostUserClassBody": {
+        "type": "object",
+        "properties": {
+          "userPlanId": {
+            "type": "integer"
+          }
+        }
+      },
+      "PostUserClassResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "DeleteUserReservationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "GetUserCollectionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "reviewCounts": {
+            "type": "integer"
+          },
+          "rating": {
+            "type": "integer"
+          },
+          "isLiked": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GetUserReserationResponse": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "storeId": {
+            "type": "integer"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "weekDay": {
+            "type": "string"
+          },
+          "reservationId": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerSigninBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerSigninResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPostAccountBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPostAccountResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerGetAccountResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPutAccountBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPutAccountResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPutPasswordBody": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPutPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerGetStoresResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "float"
+          },
+          "lng": {
+            "type": "float"
+          },
+          "reviewCounts": {
+            "type": "integer"
+          },
+          "rating": {
+            "type": "float"
+          }
+        }
+      },
+      "OwnerPostStoreBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "file"
+          }
+        }
+      },
+      "OwnerPostStoreResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerPutStoreBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "file"
+          }
+        }
+      },
+      "OwnerPutStoreResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerGetStoreResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "photo": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "reviewCounts": {
+            "type": "integer"
+          },
+          "rating": {
+            "type": "float"
+          }
+        }
+      },
+      "OwnerGetClassesResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "weekDay": {
+            "type": "integer"
+          },
+          "className": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "headcount": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerPostClassBody": {
+        "type": "object",
+        "properties": {
+          "weekDay": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "headcount": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPostClassResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerPutClassBody": {
+        "type": "object",
+        "properties": {
+          "weekDay": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "headcount": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPutClassResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerDeleteClassResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerGetPlansResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "planAmount": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "planType": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerPostPlanBody": {
+        "type": "object",
+        "properties": {
+          "planName": {
+            "type": "string"
+          },
+          "planType": {
+            "type": "string"
+          },
+          "planAmount": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "OwnerPostPlanResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          }
+        }
+      },
+      "OwnerPutPlanBody": {
+        "type": "object",
+        "properties": {
+          "planName": {
+            "type": "string"
+          },
+          "planType": {
+            "type": "string"
+          },
+          "planAmount": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "OwnerPutPlanResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerDeletePlanResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "OwnerGetStoreReviewsResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          }
+        }
+      },
       "ErrorResponse": {
         "type": "object",
         "properties": {
@@ -542,15 +1047,28 @@
     "/api/users/like_stores": {
       "get": {
         "description": "",
+        "tags": [
+          "Users"
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "如無有效方案時回傳'目前無有效方案'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserCollectionResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -558,15 +1076,28 @@
     "/api/users/reservations": {
       "get": {
         "description": "",
+        "tags": [
+          "Users"
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "如無有效方案時回傳'目前無有效方案'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserReserationResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -866,362 +1397,12 @@
         }
       }
     },
-    "/api/owner/signin": {
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/users": {
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/owner/users/account": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "put": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/users/password": {
-      "put": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/stores": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/stores/{store_id}": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/stores/{store_id}/classes": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/classes/{schedule_id}": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "schedule_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "schedule_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/stores/{store_id}/plans": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/plans/{plan_id}": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "plan_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "plan_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
-    "/api/owner/stores/{store_id}/reviews": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        }
-      }
-    },
     "/api/classes/{class_id}": {
       "post": {
-        "description": "",
+        "description": "user reserve a class",
+        "tags": [
+          "Stores"
+        ],
         "parameters": [
           {
             "name": "class_id",
@@ -1230,22 +1411,46 @@
             "type": "string"
           }
         ],
+        "requestBody": {
+          "description": "如沒有輸入評價或評論時回傳'必須輸入評價或評論'，如評論超過100字元回傳'評論不可超過100字元'，store_id不存在時回傳'場館不存在'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUserClassBody"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "備註超過50字回傳'備註不可超過50字元'，課程已額滿回傳'課程已額滿'，沒有適用方案回傳'沒有適用方案'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostUserClassResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/reservations/{reservation_id}": {
       "delete": {
-        "description": "",
+        "description": "user cancel a class reservation",
+        "tags": [
+          "Reservations"
+        ],
         "parameters": [
           {
             "name": "reservation_id",
@@ -1256,13 +1461,729 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteUserReservationResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/signin": {
+      "post": {
+        "description": "owner sign in",
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerSigninBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerSigninResponse"
+                }
+              }
+            }
           },
-          "403": {
-            "description": "Forbidden"
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/users": {
+      "post": {
+        "description": "owner apply for an account",
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "兩次密碼不同回傳'第二次輸入密碼有誤'，email已註冊過回傳'email已重複註冊'，商家名稱超過50字元回傳'商家名稱不可超過50字'，任一欄位空白回傳'必須輸入所有欄位'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPostAccountBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPostAccountResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/users/account": {
+      "get": {
+        "description": "owner get account data",
+        "tags": [
+          "Owner"
+        ],
+        "responses": {
+          "200": {
+            "description": "email不正確回傳'帳號不存在'，密碼錯誤回傳'密碼錯誤'",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetAccountResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "owner amend account info",
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "email已註冊過回傳'email已重複註冊'，商家名稱超過50字元回傳'商家名稱不可超過50字'，任一欄位空白回傳'必須輸入所有欄位'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPutAccountBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPutAccountResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/users/password": {
+      "put": {
+        "description": "owner amend password",
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "兩次密碼不同回傳'第二次輸入密碼有誤'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPutPasswordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPutPasswordResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/stores": {
+      "get": {
+        "description": "owner get stores",
+        "tags": [
+          "Owner"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetStoresResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Owner create new store",
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有場館名稱超過50字回傳'場館名稱不可超過50字元'，如有地址超過100字回傳'地址不可超過100字元'，如有場館介紹超過300字回傳'場館介紹不可超過300字元'，如有電話超過100字回傳'電話不可超過100字元'，如照片上傳失敗回傳'照片上傳失敗'，如場館名或地址重複，回傳'場館名或地址已註冊過'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPostStoreBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPostStoreResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/stores/{store_id}": {
+      "put": {
+        "description": "owner amend store information",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有場館名稱超過50字回傳'場館名稱不可超過50字元'，如有地址超過100字回傳'地址不可超過100字元'，如有場館介紹超過300字回傳'場館介紹不可超過300字元'，如有電話超過100字回傳'電話不可超過100字元'，如照片上傳失敗回傳'照片上傳失敗'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPutStoreBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPutStoreResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "owner get a store information",
+        "tags": [
+          "Owner"
+        ],
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetStoreResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/stores/{store_id}/classes": {
+      "get": {
+        "description": "Owner get a store classes",
+        "tags": [
+          "Owner"
+        ],
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetClassesResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "owner create class schedule",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有課程名稱超過50字回傳'課程名稱不可超過50字元'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPostClassBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPostClassResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/classes/{schedule_id}": {
+      "put": {
+        "description": "Owner amend class schedule",
+        "parameters": [
+          {
+            "name": "schedule_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有課程名稱超過50字回傳'課程名稱不可超過50字元'，場館無該課表時回傳'課表不存在'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPutClassBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPutClassResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Owner delete class schedule",
+        "parameters": [
+          {
+            "name": "schedule_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerDeleteClassResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/stores/{store_id}/plans": {
+      "get": {
+        "description": "Owner get plans from a store",
+        "tags": [
+          "Owner"
+        ],
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetPlansResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Owner post plans for a store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有方案名稱超過50字回傳'方案名稱不可超過50字元'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPostPlanBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPostPlanResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/plans/{plan_id}": {
+      "put": {
+        "description": "Owner amend a store plan",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "requestBody": {
+          "description": "如有空白欄位回傳'所有欄位必須輸入'，如有方案名稱超過50字回傳'方案名稱不可超過50字元'",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPutPlanBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerPutPlanResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Owner delete a store plan",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerDeletePlanResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/owner/stores/{store_id}/reviews": {
+      "get": {
+        "description": "Owner get a store reviews",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Owner"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerGetStoreReviewsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
