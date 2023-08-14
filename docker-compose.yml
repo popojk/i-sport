@@ -1,0 +1,29 @@
+services:
+  isport-db:
+    image: popojk/isport-db:latest
+    container_name: isport-db
+    environment:
+      MYSQL_DATABASE: i_sport_workplace
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 96450065
+    ports:
+      - 3307:3306
+    networks:
+      - isport-network
+    external_links:
+      - isport-app:isport-app
+
+  isport-app:
+    image: popojk/isport-api:latest
+    ports:
+      - 8080:8080
+    networks:
+      - isport-network
+    external_links:
+      - isport-db:isport-db
+    depends_on:
+      - isport-db
+
+networks:
+ isport-network:
+   driver: bridge

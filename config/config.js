@@ -3,11 +3,9 @@ module.exports = {
     username: 'root',
     password: '96450065',
     database: 'i_sport_workplace',
-    host: '127.0.0.1',
-    dialect: 'mysql',
-    dialectOptions: {
-      useUTC: false
-    }
+    host: 'isport-db',
+    port: '3307',
+    dialect: 'mysql'
   },
   test: {
     username: 'root',
@@ -16,6 +14,7 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'mysql'
   },
+  /*
   production: {
     username: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
@@ -23,5 +22,13 @@ module.exports = {
     database: process.env.RDS_DB_NAME,
     dialect: 'mysql',
     operatorsAliases: false
+  } */
+  production: {
+    username: 'root',
+    password: '96450065',
+    database: 'i_sport_workplace',
+    host: 'isport-db',
+    port: '3306',
+    dialect: 'mysql'
   }
 }
