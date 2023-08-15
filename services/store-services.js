@@ -1,6 +1,7 @@
 const { Store, ClassSchedule, Class, Plan, Review, Collection } = require('../models')
 const helpers = require('../_helpers')
 const sequelize = require('sequelize')
+const { paginate } = require('../helpers/paginate-helpers')
 
 const storeServices = {
   getStores: (req, cb) => {
@@ -173,24 +174,32 @@ const storeServices = {
       .catch(err => cb(err))
   },
   getReviews: (req, cb) => {
-    return Review.findAll({
-      where: { storeId: req.params.store_id },
-      raw: true,
-      attributes: ['id', 'createdAt', 'rating', 'content',
-        [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
-        [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
-      ],
-      order: [['id', 'DESC']]
-    })
-      .then(reviews => {
-        if (reviews.length === 0) throw new Error('商家無評價')
-        const data = reviews.map(review => {
-          review.createdAt = `${review.createdAt.getFullYear()}-${review.createdAt.getMonth() + 1}-${review.createdAt.getDate()}`
-          return review
-        })
-        return cb(null, data)
+    try {
+      const page = req.query.page
+      const pageSize = req.query.pageSize
+      if (!page || !pageSize) throw new Error('請提供page及pageSize')
+      return Review.findAll({
+        where: { storeId: req.params.store_id },
+        ...paginate({ page, pageSize }),
+        raw: true,
+        attributes: ['id', 'createdAt', 'rating', 'content',
+          [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Review.user_id)'), 'avatar'],
+          [sequelize.literal('(SELECT nickname FROM Users WHERE Users.id = Review.user_id)'), 'nickname']
+        ],
+        order: [['id', 'DESC']]
       })
-      .catch(err => cb(err))
+        .then(reviews => {
+          if (reviews.length === 0) throw new Error('商家無評價')
+          const data = reviews.map(review => {
+            review.createdAt = `${review.createdAt.getFullYear()}-${review.createdAt.getMonth() + 1}-${review.createdAt.getDate()}`
+            return review
+          })
+          return cb(null, data)
+        })
+        .catch(err => cb(err))
+    } catch (err) {
+      cb(err)
+    }
   },
   postReview: (req, cb) => {
     try {

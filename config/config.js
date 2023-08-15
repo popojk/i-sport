@@ -3,7 +3,7 @@ module.exports = {
     username: 'root',
     password: '96450065',
     database: 'i_sport_workplace',
-    host: 'isport-db',
+    host: '127.0.0.1',
     port: '3307',
     dialect: 'mysql'
   },
