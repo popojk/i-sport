@@ -15,6 +15,7 @@ module.exports = {
     dialect: 'mysql'
   },
   /*
+  // for AWS deploy
   production: {
     username: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
@@ -23,6 +24,7 @@ module.exports = {
     dialect: 'mysql',
     operatorsAliases: false
   } */
+  // for docker deploy
   production: {
     username: 'root',
     password: '96450065',

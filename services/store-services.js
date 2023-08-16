@@ -2,6 +2,7 @@ const { Store, ClassSchedule, Class, Plan, Review, Collection } = require('../mo
 const helpers = require('../_helpers')
 const sequelize = require('sequelize')
 const { paginate } = require('../helpers/paginate-helpers')
+const { classDataHelper, getCurrentSevenDays, buildClassData } = require('../helpers/class-helpers')
 
 const storeServices = {
   getStores: (req, cb) => {
@@ -42,29 +43,20 @@ const storeServices = {
   },
   getClasses: (req, cb) => {
     const userId = helpers.getUser(req).id
-    // get day
-    const currentSevenDates = {}
-    for (let i = 0; i < 7; i++) {
-      const date = new Date()
-      date.setDate(date.getDate() + i)
-      currentSevenDates[new Date(date).getDay()] = new Date(date).setHours(0, 0, 0, 0)
-    }
-    // get all class schedule
+    // get dates of the current 7 days
+    const currentSevenDates = getCurrentSevenDays()
+
     return Promise.all([
+      // get all class schedules
       ClassSchedule.findAll({
         where: { storeId: req.params.store_id },
         raw: true
       }),
+      // get the existing classes in the current 7 days
       Class.findAll({
         where: {
           storeId: req.params.store_id,
-          date: [currentSevenDates[0],
-            currentSevenDates[1],
-            currentSevenDates[2],
-            currentSevenDates[3],
-            currentSevenDates[4],
-            currentSevenDates[5],
-            currentSevenDates[6]]
+          date: currentSevenDates
         },
         attributes: ['id', 'date', 'startDateTime', 'classScheduleId',
           [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = Class.store_id)'), 'storeName'],
@@ -76,58 +68,42 @@ const storeServices = {
         raw: true
       })
     ])
+      // check and build classes in the current 7 days
       .then(([classSchedules, classes]) => {
+        // if there is no class build, build all classes in the current 7 days
         if (classes.length === 0) {
           const classesData = classSchedules.map(schedule => {
-            const { startTime, weekDay, storeId, id } = schedule
-            const [hh, mm] = startTime.split(':')
-            const date = currentSevenDates[weekDay]
-            const startDateTime = new Date(date).setHours(Number(hh), Number(mm), 0)
-            return {
-              date,
-              startDateTime,
-              storeId,
-              classScheduleId: id
-            }
+            return buildClassData(schedule, currentSevenDates)
           })
           return Class.bulkCreate(classesData).then(() => classes)
+          // if there are existing classes, scan classSchedules and build class
         } else {
-          const classScheduleIds = classes.map(cls => {
-            return cls.classScheduleId
-          })
-          const classesData = []
-          classSchedules.forEach(schedule => {
-            if (!classScheduleIds.includes(schedule.id)) {
-              const { startTime, weekDay, storeId, id } = schedule
-              const [hh, mm] = startTime.split(':')
-              const date = currentSevenDates[weekDay]
-              const startDateTime = new Date(date).setHours(Number(hh), Number(mm), 0)
-              classesData.push({
-                date,
-                startDateTime,
-                storeId,
-                classScheduleId: id
-              })
-            }
-          })
-          if (classesData.length === 0) {
+          // if all classes were built, return directly
+          if (classSchedules.length === classes.length) {
             return Promise.resolve(classes)
+            // get schedule id from current classes, and build class if there are missing classes
           } else {
-            return Class.bulkCreate(classesData).then(() => classes)
+            // get schedule id from current classes
+            const classScheduleIds = classes.map(cls => {
+              return cls.classScheduleId
+            })
+            // scan all classSchedules, and build class if current classes has missing classes
+            const classesData = []
+            classSchedules.forEach(schedule => {
+              if (!classScheduleIds.includes(schedule.id)) {
+                classesData.push(buildClassData(schedule, currentSevenDates))
+              }
+            })
+            return Class.bulkCreate(classesData)
           }
         }
       })
+      // get all classes in the current 7 days
       .then(() => {
         return Class.findAll({
           where: {
             storeId: req.params.store_id,
-            date: [currentSevenDates[0],
-              currentSevenDates[1],
-              currentSevenDates[2],
-              currentSevenDates[3],
-              currentSevenDates[4],
-              currentSevenDates[5],
-              currentSevenDates[6]]
+            date: currentSevenDates
           },
           attributes: ['id', 'date', 'startDateTime', 'classScheduleId',
             [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = Class.store_id)'), 'StoreName'],
@@ -143,20 +119,9 @@ const storeServices = {
           ]
         })
       })
+      // return classes to frontend
       .then(classes => {
-        const weekDays = ['日', '一', '二', '三', '四', '五', '六']
-        const classesData = classes.map(element => {
-          const data = {
-            ...element,
-            isClosed: new Date().getTime() > element.startDateTime.getTime()
-          }
-          data.date = `${element.date.getFullYear()}-${element.date.getMonth() + 1}-${element.date.getDate()}`
-          data.isReserved = data.isReserved === 1
-          data.weekDay = weekDays[data.weekDay]
-          delete data.startDateTime
-          delete data.classScheduleId
-          return data
-        })
+        const classesData = classDataHelper(classes)
         return cb(null, classesData)
       })
       .catch(err => cb(err))
