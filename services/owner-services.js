@@ -23,9 +23,11 @@ const ownerServices = {
   },
   signUp: (req, cb) => {
     const { email, storeName, password, confirmPassword } = req.body
-    if (!email || !storeName || !password) throw new Error('必須輸入所有欄位')
+    if (!email.trim() || !storeName.trim() || !password.trim()) throw new Error('必須輸入所有欄位')
     if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
     if (storeName.length > 50) throw new Error('商家名稱不可超過50字')
+    if (email.length > 50) throw new Error('email不可超過50字')
+    if (password.length > 50) throw new Error('密碼不可超過50字')
     User.findOne({
       where: { email }
     })
@@ -50,7 +52,7 @@ const ownerServices = {
           token,
           userId: userData.id
         }
-        cb(null, data)
+        return cb(null, data)
       })
       .catch(err => cb(err))
   },
