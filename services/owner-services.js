@@ -244,6 +244,22 @@ const ownerServices = {
       })
       .catch(err => cb(err))
   },
+  deleteStore: (req, cb) => {
+    return Store.findOne({
+      where: {
+        id: req.params.store_id,
+        userId: helpers.getUser(req).id
+      }
+    })
+      .then(store => {
+        if (!store) throw new Error('場館不存在')
+        return store.destroy()
+      })
+      .then(() => {
+        return cb(null, '場館已刪除')
+      })
+      .catch(err => cb(err))
+  },
   getClassSchedules: (req, cb) => {
     return ClassSchedule.findAll({
       where: [{ store_id: req.params.store_id },

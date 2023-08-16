@@ -28,6 +28,9 @@ const ownerController = {
   getStore: (req, res, next) => {
     ownerServices.getStore(req, (err, data) => err ? next(err) : res.json(data))
   },
+  deleteStore: (req, res, next) => {
+    ownerServices.deleteStore(req, (err, data) => err ? next(err) : res.json(data))
+  },
   getClassSchedules: (req, res, next) => {
     ownerServices.getClassSchedules(req, (err, data) => err ? next(err) : res.json(data))
   },

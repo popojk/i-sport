@@ -12,6 +12,7 @@ router.get('/stores', authenticated, authenticatedOwner, ownerController.getStor
 router.post('/stores', authenticated, authenticatedOwner, upload.single('photo'), ownerController.postStore)
 router.put('/stores/:store_id', authenticated, authenticatedOwner, upload.single('photo'), ownerController.putStore)
 router.get('/stores/:store_id', authenticated, authenticatedOwner, ownerController.getStore)
+router.delete('/stores/:store_id', authenticated, authenticatedOwner, ownerController.deleteStore)
 router.get('/stores/:store_id/classes', authenticated, authenticatedOwner, ownerController.getClassSchedules)
 router.post('/stores/:store_id/classes', authenticated, authenticatedOwner, ownerController.postClassSchedules)
 router.put('/classes/:schedule_id', authenticated, authenticatedOwner, ownerController.putClassSchedule)

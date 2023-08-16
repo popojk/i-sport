@@ -72,7 +72,7 @@ const orderServices = {
           if (data.Status === 'SUCCESS') {
             return Plan.findByPk(order.planId)
               .then(plan => {
-                let date = new Date()
+                const date = new Date()
                 return UserPlan.create({
                   userId: order.userId,
                   planId: order.planId,

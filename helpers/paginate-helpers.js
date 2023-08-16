@@ -8,5 +8,5 @@ const paginate = ({ page, pageSize }) => {
 }
 
 module.exports = {
-  paginate,
+  paginate
 }
