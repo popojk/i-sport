@@ -168,76 +168,83 @@ const ownerServices = {
     }
   },
   putStore: (req, cb) => {
-    const { storeName, address, introduction, phone, email } = req.body
-    const { file } = req
-    if (!storeName || !address || !introduction || !phone || !email) throw new Error('所有欄位必須輸入')
-    if (storeName.length > 50) throw new Error('場館名稱不可超過50字元')
-    if (address.length > 100) throw new Error('地址不可超過100字元')
-    if (introduction.length > 300) throw new Error('場館介紹不可超過300字元')
-    if (phone.length > 100) throw new Error('電話不可超過100字元')
-    if (JSON.stringify(file) !== '{}' && file !== undefined) {
-      return Promise.all([
-        Store.findOne({ where: { storeName } }),
-        Store.findOne({ where: { address } })
-      ])
-        .then(([nameStore, addressStore]) => {
-          if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
-          if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
-          return Promise.all([
-            Store.findOne({
+    try {
+      const { storeName, address, introduction, phone, email } = req.body
+      const { file } = req
+      if (!storeName.trim() || !address.trim() || !introduction.trim() || !phone.trim() || !email.trim()) throw new Error('所有欄位必須輸入')
+      if (storeName.length > 50) throw new Error('場館名稱不可超過50字元')
+      if (address.length > 100) throw new Error('地址不可超過100字元')
+      if (introduction.length > 300) throw new Error('場館介紹不可超過300字元')
+      if (phone.length > 100) throw new Error('電話不可超過100字元')
+      if (email.length > 50) throw new Error('email不可超過50字')
+      // if owner has upload photo, then re-upload photo
+      if (JSON.stringify(file) !== '{}' && file !== undefined) {
+        return Promise.all([
+          Store.findOne({ where: { storeName } }),
+          Store.findOne({ where: { address } })
+        ])
+          .then(([nameStore, addressStore]) => {
+            if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
+            if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
+            return Promise.all([
+              Store.findOne({
+                where: {
+                  id: req.params.store_id,
+                  userId: helpers.getUser(req).id
+                }
+              }),
+              imgurFileHandler(file)
+            ])
+          })
+          .then(([store, photoFilePath]) => {
+            if (!store) throw new Error('場館不存在')
+            if (!photoFilePath) throw new Error('照片上傳失敗')
+            return store.update({
+              email,
+              storeName,
+              address,
+              introduction,
+              phone,
+              photo: photoFilePath
+            })
+          })
+          .then(() => {
+            return cb(null, '場館更新完成')
+          })
+          .catch(err => cb(err))
+        // if owner did not upload photo, then update store data besides photo
+      } else {
+        return Promise.all([
+          Store.findOne({ where: { storeName } }),
+          Store.findOne({ where: { address } })
+        ])
+          .then(([nameStore, addressStore]) => {
+            if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
+            if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
+            return Store.findOne({
               where: {
                 id: req.params.store_id,
                 userId: helpers.getUser(req).id
               }
-            }),
-            imgurFileHandler(file)
-          ])
-        })
-        .then(([store, photoFilePath]) => {
-          if (!store) throw new Error('場館不存在')
-          if (!photoFilePath) throw new Error('照片上傳失敗')
-          return store.update({
-            email,
-            storeName,
-            address,
-            introduction,
-            phone,
-            photo: photoFilePath
+            })
           })
-        })
-        .then(() => {
-          return cb(null, '場館更新完成')
-        })
-        .catch(err => cb(err))
-    } else {
-      return Promise.all([
-        Store.findOne({ where: { storeName } }),
-        Store.findOne({ where: { address } })
-      ])
-        .then(([nameStore, addressStore]) => {
-          if (nameStore && Number(req.params.store_id) !== nameStore.id) throw new Error('場館名稱已被使用')
-          if (addressStore && Number(req.params.store_id) !== addressStore.id) throw new Error('場館地址已被使用')
-          return Store.findOne({
-            where: {
-              id: req.params.store_id,
-              userId: helpers.getUser(req).id
-            }
+          .then(store => {
+            if (!store) throw new Error('場館不存在')
+            return store.update({
+              email,
+              storeName,
+              address,
+              introduction,
+              phone
+            })
           })
-        })
-        .then(store => {
-          if (!store) throw new Error('場館不存在')
-          return store.update({
-            email,
-            storeName,
-            address,
-            introduction,
-            phone
+          .then(() => {
+            return cb(null, '場館更新完成')
           })
-        })
-        .then(() => {
-          return cb(null, '場館更新完成')
-        })
-        .catch(err => cb(err))
+          .catch(err => cb(err))
+      }
+    } catch (err) {
+      cb(err)
     }
   },
   getStore: (req, cb) => {
