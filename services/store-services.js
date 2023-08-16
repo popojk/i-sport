@@ -2,7 +2,8 @@ const { Store, ClassSchedule, Class, Plan, Review, Collection } = require('../mo
 const helpers = require('../_helpers')
 const sequelize = require('sequelize')
 const { paginate } = require('../helpers/paginate-helpers')
-const { classDataHelper, getCurrentSevenDays, buildClassData } = require('../helpers/class-helpers')
+const { classDataHelper, buildClassData } = require('../helpers/class-helpers')
+const { getCurrentSevenDays, getReviewCreatedDate } = require('../helpers/date-helpers')
 
 const storeServices = {
   getStores: (req, cb) => {
@@ -155,11 +156,11 @@ const storeServices = {
       })
         .then(reviews => {
           if (reviews.length === 0) throw new Error('商家無評價')
-          const data = reviews.map(review => {
-            review.createdAt = `${review.createdAt.getFullYear()}-${review.createdAt.getMonth() + 1}-${review.createdAt.getDate()}`
+          const reviewsData = reviews.map(review => {
+            review.createdAt = getReviewCreatedDate(review)
             return review
           })
-          return cb(null, data)
+          return cb(null, reviewsData)
         })
         .catch(err => cb(err))
     } catch (err) {
