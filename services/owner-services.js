@@ -69,6 +69,7 @@ const ownerServices = {
   putAccount: (req, cb) => {
     try {
       const { email, storeName } = req.body
+      if (email.length > 50) throw new Error('email不可超過50字')
       if (storeName.length > 50) throw new Error('商家名稱不可超過50字')
       return Promise.all([
         User.findOne({ where: { email }, raw: true }),
@@ -90,21 +91,27 @@ const ownerServices = {
     }
   },
   putPassword: (req, cb) => {
-    const { password, confirmPassword } = req.body
-    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
-    return Promise.all([
-      User.findByPk(helpers.getUser(req).id),
-      bcrypt.hash(password, 10)
-    ])
-      .then(([user, hash]) => {
-        user.update({
-          password: hash
+    try {
+      const { password, confirmPassword } = req.body
+      if (!password.trim()) throw new Error('密碼不可為空值')
+      if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
+      if (password.length > 50) throw new Error('密碼不可超過50字')
+      return Promise.all([
+        User.findByPk(helpers.getUser(req).id),
+        bcrypt.hash(password, 10)
+      ])
+        .then(([user, hash]) => {
+          user.update({
+            password: hash
+          })
         })
-      })
-      .then(() => {
-        return cb(null, { message: '更新成功' })
-      })
-      .catch(err => cb(err))
+        .then(() => {
+          return cb(null, { message: '更新成功' })
+        })
+        .catch(err => cb(err))
+    } catch (err) {
+      cb(err)
+    }
   },
   getStores: (req, cb) => {
     return Store.findAll({
