@@ -8,13 +8,17 @@ const { getCurrentSevenDays, getReviewCreatedDate } = require('../helpers/date-h
 const storeServices = {
   getStores: (req, cb) => {
     const userId = helpers.getUser(req).id
+    const page = req.query.page
+    const pageSize = req.query.pageSize
+    if (!page || !pageSize) throw new Error('請提供page及pageSize')
     return Store.findAll({
       raw: true,
       attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
         [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${userId})`), 'isLiked']
-      ]
+      ],
+      ...paginate({ page, pageSize })
     })
       .then(stores => {
         const data = stores.map(store => {

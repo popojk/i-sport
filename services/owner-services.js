@@ -4,6 +4,7 @@ const sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 const helpers = require('../_helpers')
 const { imgurFileHandler } = require('../helpers/file-helpers')
+const { paginate } = require('../helpers/paginate-helpers')
 
 const ownerServices = {
   signIn: (req, cb) => {
@@ -114,13 +115,17 @@ const ownerServices = {
     }
   },
   getStores: (req, cb) => {
+    const page = req.query.page
+    const pageSize = req.query.pageSize
+    if (!page || !pageSize) throw new Error('請提供page及pageSize')
     return Store.findAll({
       where: { userId: helpers.getUser(req).id },
       raw: true,
       attributes: ['id', 'storeName', 'photo', 'address', 'introduction', 'lat', 'lng',
         [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
         [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating']
-      ]
+      ],
+      ...paginate({ page, pageSize })
     })
       .then(stores => {
         if (stores.length === 0) throw new Error('沒有建立之場館')
@@ -469,6 +474,9 @@ const ownerServices = {
       .catch(err => cb(err))
   },
   getStoreReviews: (req, cb) => {
+    const page = req.query.page
+    const pageSize = req.query.pageSize
+    if (!page || !pageSize) throw new Error('請提供page及pageSize')
     return Review.findAll({
       where: [{ store_id: req.params.store_id },
         { '$Store.user_id$': helpers.getUser(req).id }],
@@ -482,7 +490,8 @@ const ownerServices = {
       ],
       order: [['id', 'DESC']],
       raw: true,
-      nest: true
+      nest: true,
+      ...paginate({ page, pageSize })
     })
       .then(reviews => {
         if (reviews.length === 0) throw new Error('商家無評價')
