@@ -1,0 +1,11 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "semicolon": {
+      "options": [
+        "always"
+      ]
+    },
+    "@typescript-eslint/no-var-requires": 0
+  }
+}

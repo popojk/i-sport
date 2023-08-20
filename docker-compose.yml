@@ -13,7 +13,7 @@ services:
     external_links:
       - isport-app:isport-app
 
-  isport-app:
+  isport-api:
     image: popojk/isport-api:latest
     ports:
       - 8080:8080
@@ -23,6 +23,17 @@ services:
       - isport-db:isport-db
     depends_on:
       - isport-db
+
+  isport-proxy:
+    image: popojk/isport-proxy
+    ports:
+      - 80:80
+    networks:
+      - isport-network
+    external_links:
+      - isport-api:isport-api
+    depends_on:
+      - isport-api
 
 networks:
  isport-network:

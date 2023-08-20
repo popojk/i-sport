@@ -6,16 +6,18 @@
   "scripts": {
     "prestart": "node_modules/sequelize-cli/lib/sequelize db:migrate:undo:all &&  node_modules/sequelize-cli/lib/sequelize db:migrate && node_modules/sequelize-cli/lib/sequelize db:seed:undo:all && node_modules/sequelize-cli/lib/sequelize db:seed:all",
     "start": "NODE_ENV=production node app.js",
-    "dev": "NODE_ENV=development nodemon app.js",
+    "build": "tsc",
+    "dev": "NODE_ENV=development nodemon app.ts",
     "prod": "NODE_ENV=production nodemon app.js",
     "test": "mocha test --exit --recursive --timeout 5000",
-    "lint": "eslint \"**/*.js\" --fix",
+    "lint": "tslint -p tsconfig.json",
     "swagger-autogen": "node ./swagger.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^20.5.0",
     "bcrypt-nodejs": "0.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
@@ -44,6 +46,13 @@
     "sinon-chai": "^3.3.0",
     "swagger-autogen": "^2.23.4",
     "swagger-ui-express": "^5.0.0",
+    "typescript": "^5.1.6",
     "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3"
   }
 }
