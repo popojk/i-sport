@@ -1,36 +1,67 @@
-require('dotenv').config();
-const path = require('path');
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
+import dotenv from 'dotenv';
+dotenv.config();
+import path from 'path';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
+import { ApiRoute } from './routes/apis/api.routing';
 const swaggerFile = require('./swagger_output.json');
 const passport = require('./config/passport');
-const cors = require('cors');
-const { apis } = require('./routes');
-const app = express();
-const port = process.env.PORT || 8080;
 
-const corsOptions = {
-  origin: [
-    // frontend url
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'https://isport-beginneraboutlife116.vercel.app',
-    'https://isport-omega.vercel.app'
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
 
-app.use(cors(corsOptions));
-app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(passport.initialize());
-app.use(passport.session());
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
+export class App {
+  private port = process.env.PORT || 8080;
+  private app = express();
+  private apiRoute = new ApiRoute();
+  private corsOptions = {
+    origin: [
+      // frontend url
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://isport-beginneraboutlife116.vercel.app',
+      'https://isport-omega.vercel.app'
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization']
+  };
 
-app.use('/api', apis);
+  constructor() {
+    this.setCors();
+    this.setApiDoc();
+    this.setFormat();
+    this.setPassport();
+    this.setPath();
+    this.setRouter();
+  }
 
-app.listen(port, () => console.log(`i-sport API app is listening on port ${port}`));
+  public bootstrap(): void {
+    this.app.listen(this.port, () => console.log(`i-sport API app is listening on port ${this.port}`));
+  }
 
-module.exports = app;
+  private setCors(): void {
+    this.app.use(cors(this.corsOptions));
+  }
+
+  private setApiDoc(): void {
+    this.app.use('/api-doc', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+  }
+
+  private setFormat(): void {
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json());
+  }
+
+  private setPassport(): void {
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+  }
+
+  private setPath(): void {
+    this.app.use('/upload', express.static(path.join(__dirname, 'upload')));
+  }
+
+  private setRouter(): void {
+    this.app.use('/api', this.apiRoute.router);
+  }
+
+}

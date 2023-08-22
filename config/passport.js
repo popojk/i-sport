@@ -5,7 +5,6 @@ const bcrypt = require('bcryptjs')
 const { User } = require('../models')
 const JWTStrategy = passportJWT.Strategy
 const ExtractJWT = passportJWT.ExtractJwt
-const sequelize = require('sequelize')
 
 passport.use(new LocalStrategy(
   {
