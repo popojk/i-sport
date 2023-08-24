@@ -28,6 +28,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Plan.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     planName: DataTypes.STRING,

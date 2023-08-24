@@ -27,6 +27,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   UserPlan.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     userId: DataTypes.INTEGER,

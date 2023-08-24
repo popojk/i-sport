@@ -25,6 +25,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Review.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     content: DataTypes.STRING,

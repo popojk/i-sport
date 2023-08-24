@@ -21,6 +21,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Collection.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     userId: DataTypes.INTEGER,

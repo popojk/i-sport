@@ -40,6 +40,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Store.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     photo: DataTypes.STRING,

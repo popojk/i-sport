@@ -29,6 +29,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   ClassSchedule.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     weekDay: DataTypes.INTEGER,

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { SignInDTO } from '../../dtos/user.dto';
 import UserServices from '../../services/user-services';
+import { SignUpData, SignInData } from '../../interfaces/user-interface';
 
 export default class UserConroller {
 
@@ -11,11 +11,11 @@ export default class UserConroller {
   }
 
   public signIn = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.signIn(req, (err: any, signInDTO: SignInDTO) => err ? next(err) : res.json(signInDTO));
+    this.userServices.signIn(req, (err: any, data: SignInData) => err ? next(err) : res.json(data));
   }
 
    public signUp = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.signUp(req, (err: any, data: any) => err ? next(err) : res.json(data));
+    this.userServices.signUp(req, (err: any, data: SignUpData) => err ? next(err) : res.json(data));
   }
 /* getUser: (req, res, next) => {
   userServices.getUser(req, (err, data) => err ? next(err) : res.json(data))

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 import { Request } from 'express';
 const { User, UserPlan, Collection, Store, Reservation, Class } = require('../models')
-import { SignInDTO } from '../dtos/user.dto';
+import { UserInstance, SignUpData, SignInData } from '../interfaces/user-interface';
 import sequelize from 'sequelize';
 import { Op, Model } from 'sequelize';
 import jwt from 'jsonwebtoken';
@@ -11,27 +11,39 @@ import { getUser } from '../_helpers';
 export default class UserServices {
 
   public signIn (req: Request, cb: any) {
-    // #swagger.tags = ['Users']
     try {
+      // get user data from rquest
       const userData = req.user.dataValues;
+      // issue JWT
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' });
-      const signInDTO = new SignInDTO(token, userData.id, userData.avatar, userData.role);
-      cb(null, signInDTO);
+      // respond signin data
+      const data: SignInData = {
+        token,
+        userId: userData.id,
+        avatar: userData.avatar,
+        role: userData.role
+      };
+      cb(null, data);
     } catch (err) {
       cb(err);
     }
   }
+
   public signUp (req: Request, cb: any) {
+    // get signup data from request body
     const { email, password, confirmPassword } = req.body;
     if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤');
+    // check if email already signup
     User.findOne({
       where: { email }
     })
-      .then((user: Model) => {
+      .then((user: UserInstance) => {
         if (user) throw new Error('email已重複註冊');
+        // if email not signup yet, encrypt the password
         return bcrypt.hash(password, 10);
       })
       .then((hash: string) => {
+        // create user
         return User.create({
           email,
           password: hash,
@@ -39,17 +51,19 @@ export default class UserServices {
           role: 'user'
         });
       })
-      .then((user: Model) => {
-        const userData = user.toJSON();
+      .then((user: UserInstance) => {
+        const userData = user.dataValues;
         delete userData.password;
+        // issue JWT for user to login after signup
         const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' });
-        const data = {
+        // respond the signup data
+        const data: SignUpData = {
           message: '註冊成功',
           token,
           userId: userData.id,
           avatar: userData.avatar,
           role: userData.role
-        }
+        };
         cb(null, data);
       })
       .catch((err: any) => cb(err));

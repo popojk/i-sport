@@ -1,16 +1,7 @@
 'use strict';
 
 import { Model, Sequelize, DataTypes } from 'sequelize';
-
-interface UserAttributes {
-  id: number;
-  email: string;
-  password: string;
-  avatar?: string;
-  nickname?: string;
-  role: string;
-  storeName?: string;
-}
+import { UserAttributes } from '../interfaces/user-interface';
 
 module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   class User extends Model<UserAttributes> implements UserAttributes {
@@ -33,6 +24,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   User.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     email: dataTypes.STRING,

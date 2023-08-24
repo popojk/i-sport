@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import { Model, Sequelize, DataTypes } from 'sequelize';
 
@@ -31,6 +31,7 @@ module.exports = (sequelize: Sequelize, dataTypes: typeof DataTypes) => {
   Order.init({
     id: {
       type: dataTypes.NUMBER,
+      autoIncrement: true,
       primaryKey: true
     },
     tradeInfo: DataTypes.TEXT,
