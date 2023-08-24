@@ -1,15 +1,28 @@
-const express = require('express')
-const router = express.Router()
+import { RouteBase } from '../../../bases/route.base';
 const upload = require('../../../middleware/multer')
-const userController = require('../../../controllers/apis/user-controller')
+import UserController from '../../../controllers/apis/user-controller';
 const { authenticated, authenticatedUser } = require('../../../middleware/api-auth')
 
-router.post('/', userController.signUp)
+export class UserRoute extends RouteBase{
+
+  private userControllers: UserController;
+
+  constructor() {
+    super();
+    this.userControllers = new UserController();
+    this.registerRoute();
+  }
+
+  protected registerRoute(): void {
+    this.router.post('/', this.userControllers.signUp);
+  }
+
+}
+
+/* router.post('/', userController.signUp)
 router.get('/account', authenticated, authenticatedUser, userController.getUser)
 router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), userController.putAccount)
 router.put('/password', authenticated, authenticatedUser, userController.putPassword)
 router.get('/plans', authenticated, authenticatedUser, userController.getUserPlans)
 router.get('/like_stores', authenticated, authenticatedUser, userController.getUserCollections)
-router.get('/reservations', authenticated, authenticatedUser, userController.getUserReservations)
-
-module.exports = router
+router.get('/reservations', authenticated, authenticatedUser, userController.getUserReservations) */

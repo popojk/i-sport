@@ -1,51 +1,48 @@
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+import { Request } from 'express';
 const { User, UserPlan, Collection, Store, Reservation, Class } = require('../models')
-const sequelize = require('sequelize')
-const { Op } = require('sequelize')
-const jwt = require('jsonwebtoken')
-const { imgurFileHandler } = require('../helpers/file-helpers')
-const helpers = require('../_helpers')
+import { SignInDTO } from '../dtos/user.dto';
+import sequelize from 'sequelize';
+import { Op, Model } from 'sequelize';
+import jwt from 'jsonwebtoken';
+import { imgurFileHandler } from '../helpers/file-helpers';
+import { getUser } from '../_helpers';
 
-const userServices = {
-  signIn: (req, cb) => {
+export default class UserServices {
+
+  public signIn (req: Request, cb: any) {
     // #swagger.tags = ['Users']
     try {
-      const userData = req.user.toJSON()
-      delete userData.password
-      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
-      const data = {
-        token,
-        userId: userData.id,
-        avatar: userData.avatar,
-        role: userData.role
-      }
-      cb(null, data)
+      const userData = req.user.dataValues;
+      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' });
+      const signInDTO = new SignInDTO(token, userData.id, userData.avatar, userData.role);
+      cb(null, signInDTO);
     } catch (err) {
-      cb(err)
+      cb(err);
     }
-  },
-  signUp: (req, cb) => {
-    const { email, password, confirmPassword } = req.body
-    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
+  }
+  public signUp (req: Request, cb: any) {
+    const { email, password, confirmPassword } = req.body;
+    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤');
     User.findOne({
       where: { email }
     })
-      .then(user => {
-        if (user) throw new Error('email已重複註冊')
-        return bcrypt.hash(password, 10)
+      .then((user: Model) => {
+        if (user) throw new Error('email已重複註冊');
+        return bcrypt.hash(password, 10);
       })
-      .then(hash => {
+      .then((hash: string) => {
         return User.create({
           email,
           password: hash,
           nickname: '匿名',
           role: 'user'
-        })
+        });
       })
-      .then(user => {
-        const userData = user.toJSON()
-        delete userData.password
-        const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
+      .then((user: Model) => {
+        const userData = user.toJSON();
+        delete userData.password;
+        const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' });
         const data = {
           message: '註冊成功',
           token,
@@ -53,11 +50,11 @@ const userServices = {
           avatar: userData.avatar,
           role: userData.role
         }
-        cb(null, data)
+        cb(null, data);
       })
-      .catch(err => cb(err))
-  },
-  getUser: (req, cb) => {
+      .catch((err: any) => cb(err));
+  }
+  /*  getUser: (req, cb) => {
     return User.findByPk(helpers.getUser(req).id, {
       raw: true,
       attributes: ['id', 'email', 'nickname', 'avatar']
@@ -257,7 +254,5 @@ const userServices = {
         return cb(null, classesData)
       })
       .catch(err => cb(err))
-  }
+  } */
 }
-
-module.exports = userServices

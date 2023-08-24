@@ -4,7 +4,7 @@ import path from 'path';
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import { ApiRoute } from './routes/apis/api.routing';
+import { AppRoute } from './routes/app.routing';
 const swaggerFile = require('./swagger_output.json');
 const passport = require('./config/passport');
 
@@ -12,7 +12,6 @@ const passport = require('./config/passport');
 export class App {
   private port = process.env.PORT || 8080;
   private app = express();
-  private apiRoute = new ApiRoute();
   private corsOptions = {
     origin: [
       // frontend url
@@ -61,7 +60,7 @@ export class App {
   }
 
   private setRouter(): void {
-    this.app.use('/api', this.apiRoute.router);
+    this.app.use('/', new AppRoute().router);
   }
 
 }
