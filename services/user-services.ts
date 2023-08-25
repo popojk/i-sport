@@ -1,16 +1,21 @@
 const bcrypt = require('bcryptjs');
 import { Request } from 'express';
-const { User, UserPlan, Collection, Store, Reservation, Class } = require('../models')
-import { UserInstance, SignUpData, SignInData } from '../interfaces/user-interface';
+const { User, UserPlan, Collection, Store, Reservation, Class } = require('../models');
+import { UserAccountData, UserInstance, SignUpData, SignInData, UserPlanInstance, StoreWithUserPlanInstance, CollectionInstance, ReservationInstance, ReservationClass } from '../interfaces/user-interface';
 import sequelize from 'sequelize';
 import { Op, Model } from 'sequelize';
 import jwt from 'jsonwebtoken';
+import { userPlanDataHelper } from '../helpers/userPlan-helpers';
 import { imgurFileHandler } from '../helpers/file-helpers';
 import { getUser } from '../_helpers';
+import { reservationHelper } from '../helpers/reservation-helpers';
+import { ReturnMessage } from '../interfaces/message-interface';
 
 export default class UserServices {
 
-  public signIn (req: Request, cb: any) {
+  public signIn(
+    req: Request,
+    cb: (err: any, data?: SignInData) => void) {
     try {
       // get user data from rquest
       const userData = req.user.dataValues;
@@ -29,7 +34,9 @@ export default class UserServices {
     }
   }
 
-  public signUp (req: Request, cb: any) {
+  public signUp(
+    req: Request,
+    cb: (err: any, data?: SignUpData) => void) {
     // get signup data from request body
     const { email, password, confirmPassword } = req.body;
     if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤');
@@ -68,28 +75,38 @@ export default class UserServices {
       })
       .catch((err: any) => cb(err));
   }
-  /*  getUser: (req, cb) => {
-    return User.findByPk(helpers.getUser(req).id, {
+
+  public getUser = (
+    req: Request,
+    cb: (err: any, data?: UserAccountData) => void) => {
+    return User.findByPk(getUser(req).id, {
       raw: true,
       attributes: ['id', 'email', 'nickname', 'avatar']
     })
-      .then(user => {
-        cb(null, user)
+      .then((user: UserAccountData) => {
+        cb(null, user);
       })
-      .catch(err => cb(err))
-  },
-  putAccount: (req, cb) => {
+      .catch((err: any) => cb(err));
+  }
+
+  public putAccount = (
+    req: Request,
+    cb: (err: any, data?: ReturnMessage) => void) => {
     try {
-      const { email, nickname } = req.body
-      const { file } = req
-      if (!nickname) throw new Error('暱稱不可為空值')
-      if (nickname.length > 50) throw new Error('暱稱名稱不可超過50字')
+      // get user account data
+      const { email, nickname } = req.body;
+      // get user avatar
+      const { file } = req;
+      if (!nickname) throw new Error('暱稱不可為空值');
+      if (nickname.length > 50) throw new Error('暱稱名稱不可超過50字');
+      // check if email already exist and not belongs to current user
       return Promise.all([
         User.findOne({ where: { email }, raw: true }),
-        User.findByPk(helpers.getUser(req).id)
+        User.findByPk(getUser(req).id)
       ])
         .then(([emailUser, user]) => {
-          if (emailUser && emailUser.email !== helpers.getUser(req).email) throw new Error('email已重複註冊')
+          if (emailUser && emailUser.email !== getUser(req).email) throw new Error('email已重複註冊');
+          // if user upload avatar, update the avatar with others user data
           if (JSON.stringify(file) !== '{}' && file !== undefined) {
             return imgurFileHandler(file)
               .then(avatarFilePath => {
@@ -97,80 +114,87 @@ export default class UserServices {
                   email,
                   nickname,
                   avatar: avatarFilePath || user.avatar
-                })
-              })
+                });
+              });
           } else {
+            // if user did not update the avatar, just update others user data
             return user.update({
               email,
               nickname
-            })
+            });
           }
         })
-        .then(updatedUser => {
-          cb(null, { message: '更新成功' })
+        .then((updatedUser: UserInstance) => {
+          cb(null, { message: '更新成功' });
         })
-        .catch(err => cb(err))
-    } catch (err) {
-      cb(err)
+        .catch((err: any) => cb(err));
+    } catch (err: any) {
+      cb(err);
     }
-  },
-  putPassword: (req, cb) => {
-    const { password, confirmPassword } = req.body
-    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤')
+  }
+
+  public putPassword = (
+    req: Request,
+    cb: (err: any, data?: ReturnMessage) => void) => {
+    // get user password data
+    const { password, confirmPassword } = req.body;
+    if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤');
+
     return Promise.all([
-      User.findByPk(helpers.getUser(req).id),
+      User.findByPk(getUser(req).id),
+      // encrypt the password
       bcrypt.hash(password, 10)
     ])
       .then(([user, hash]) => {
-        user.update({
+        // update the password
+        return user.update({
           password: hash
-        })
+        });
       })
       .then(() => {
-        return cb(null, { message: '更新成功' })
+        // return success message
+        return cb(null, { message: '更新成功' });
       })
-      .catch(err => cb(err))
-  },
-  getUserPlans: (req, cb) => {
-    const storeId = req.query.store_id
-    if (storeId) {
+      .catch((err: any) => cb(err));
+  }
+
+  public getUserPlans = (
+    req: Request,
+    cb: (err: any, data?: UserPlanInstance[] | StoreWithUserPlanInstance[]) => void) => {
+    const storeId = req.query.store_id;
+    // if frontend set query params, get userPlans by storeId
+    if (storeId !== null) {
       return UserPlan.findAll({
         where: {
+          // find userplans with valid amount or still in valid date
           [Op.or]: [
-            [{ user_id: helpers.getUser(req).id },
-              { store_id: storeId },
-              { amount_left: { [Op.gt]: 0 } }],
-            [{ user_id: helpers.getUser(req).id },
-              { store_id: storeId },
-              { expire_date: { [Op.gt]: new Date() } }]
+            [{ user_id: getUser(req).id },
+            { store_id: storeId },
+            { amount_left: { [Op.gt]: 0 } }],
+            [{ user_id: getUser(req).id },
+            { store_id: storeId },
+            { expire_date: { [Op.gt]: new Date() } }]
           ]
         },
         attributes: ['id', 'amountLeft', 'expireDate',
           [sequelize.literal('(SELECT plan_name FROM Plans WHERE Plans.id = UserPlan.plan_id)'), 'planName'],
           [sequelize.literal('(SELECT plan_type FROM Plans WHERE Plans.id = UserPlan.plan_id)'), 'planType'],
           [sequelize.literal('(SELECT store_name FROM Stores WHERE Stores.id = UserPlan.store_id)'), 'StoreName']
-        ],
-        raw: true
+        ]
       })
-        .then(userPlans => {
-          if (userPlans.length === 0) throw new Error('目前無有效方案')
-          const data = userPlans.map(userPlan => {
-            if (userPlan.planType === '天數') {
-              const expireDate = userPlan.expireDate
-              const today = new Date()
-              const diffInMilliseconds = Math.abs(expireDate.getTime() - today.getTime())
-              const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
-              userPlan.amountLeft = diffInDays
-              return userPlan
-            }
-            return userPlan
-          })
-          return cb(null, data)
+        .then((userPlans: UserPlanInstance[]) => {
+          if (userPlans.length === 0) throw new Error('目前無有效方案');
+          const data: UserPlanInstance[] = userPlans.map(userPlan => {
+            // check if userPlan is day type, if yes insert amout left
+            return userPlanDataHelper(userPlan);
+          });
+          return cb(null, data);
         })
-        .catch(err => cb(err))
+        .catch((err: any) => cb(err));
     } else {
+      // if frontend did not set query params, get all userPlan
       return Store.findAll({
-        where: [{ '$UserPlans.user_id$': helpers.getUser(req).id }],
+        where: [{ '$UserPlans.user_id$': getUser(req).id }],
         include: {
           model: UserPlan,
           as: 'UserPlans',
@@ -188,30 +212,25 @@ export default class UserServices {
         },
         attributes: [['id', 'storeId'], 'storeName']
       })
-        .then(stores => {
-          const data = stores.map(store => {
-            store.Plans = store.UserPlans.map(plan => {
-              console.log(plan)
-              if (plan.dataValues.planType === '天數') {
-                const expireDate = plan.expireDate
-                const today = new Date()
-                const diffInMilliseconds = Math.abs(expireDate.getTime() - today.getTime())
-                const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24))
-                plan.amountLeft = diffInDays
-                return plan
-              }
-              return plan
-            })
-            return store
-          })
-          return cb(null, data)
+        .then((stores: StoreWithUserPlanInstance[]) => {
+          const data: StoreWithUserPlanInstance[] =
+            stores.map((store: StoreWithUserPlanInstance) => {
+              store.UserPlans = store.UserPlans.map((plan: UserPlanInstance) => {
+                return userPlanDataHelper(plan);
+              });
+              return store;
+            });
+          return cb(null);
         })
-        .catch(err => cb(err))
+        .catch((err: any) => cb(err));
     }
-  },
-  getUserCollections: (req, cb) => {
+  }
+
+  public getUserCollections = (
+    req: Request,
+    cb: (err: any, data?: CollectionInstance[]) => void) => {
     return Collection.findAll({
-      where: { userId: helpers.getUser(req).id },
+      where: { userId: getUser(req).id },
       raw: true,
       nest: true,
       include: {
@@ -219,24 +238,28 @@ export default class UserServices {
         attributes: ['id', 'storeName', 'photo', 'address', 'introduction',
           [sequelize.literal('(SELECT COUNT (*) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'reviewCounts'],
           [sequelize.literal('(SELECT ROUND(AVG (rating), 1) FROM Reviews WHERE Reviews.store_id = Store.id)'), 'rating'],
-          [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${helpers.getUser(req).id})`), 'isLiked']
+          [sequelize.literal(`EXISTS(SELECT 1 FROM Collections WHERE Collections.store_id = Store.id AND Collections.user_id = ${getUser(req).id})`), 'isLiked']
         ]
       }
     })
-      .then(collections => {
-        if (collections.length === 0) throw new Error('沒有收藏場館')
-        const data = collections.map(collection => {
-          collection.isLiked = collection.isLiked === 1
-          return collection.Store
-        })
-        return cb(null, data)
+      .then((collections: CollectionInstance[]) => {
+        if (collections.length === 0) throw new Error('沒有收藏場館');
+        const data: CollectionInstance[] = collections.map(collection => {
+          collection.dataValues.isLiked = collection.dataValues.isLiked === 1;
+          return collection;
+        });
+        return cb(null, data);
       })
-      .catch(err => cb(err))
-  },
-  getUserReservations: (req, cb) => {
+      .catch((err: any) => cb(err));
+  }
+
+  public getUserReservations = (
+    req: Request,
+    cb: (err: any, data?: ReservationClass[]) => void) => {
     return Reservation.findAll({
-      where: [{ user_id: helpers.getUser(req).id },
-        { '$Class.start_date_time$': { [Op.gt]: new Date() } }],
+      where: [{ user_id: getUser(req).id },
+        // only list out reservationsafter today
+      { '$Class.start_date_time$': { [Op.gt]: new Date() } }],
       raw: true,
       nest: true,
       include: {
@@ -255,18 +278,14 @@ export default class UserServices {
         [{ model: Class, as: 'Class' }, 'date', 'ASC']
       ]
     })
-      .then(reservations => {
-        if (reservations.length === 0) throw new Error('目前無預約課程')
-        const weekDays = ['日', '一', '二', '三', '四', '五', '六']
-        const classesData = reservations.map(reservation => {
-          const data = reservation.Class
-          data.reservationId = reservation.id
-          data.date = `${data.date.getFullYear()}-${data.date.getMonth() + 1}-${data.date.getDate()}`
-          data.weekDay = weekDays[data.weekDay]
-          return data
-        })
-        return cb(null, classesData)
+      .then((reservations: ReservationInstance[]) => {
+        if (reservations.length === 0) throw new Error('目前無預約課程');
+        const classesData: ReservationClass[] = reservations.map((reservation: ReservationInstance) => {
+          // create the reservation and send to frontend
+          return reservationHelper(reservation);
+        });
+        return cb(null, classesData);
       })
-      .catch(err => cb(err))
-  } */
+      .catch((err: any) => cb(err));
+  }
 }

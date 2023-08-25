@@ -5,24 +5,22 @@ const { authenticated, authenticatedUser } = require('../../../middleware/api-au
 
 export class UserRoute extends RouteBase{
 
-  private userControllers: UserController;
+  private userController: UserController;
 
   constructor() {
     super();
-    this.userControllers = new UserController();
+    this.userController = new UserController();
     this.registerRoute();
   }
 
   protected registerRoute(): void {
-    this.router.post('/', this.userControllers.signUp);
+    this.router.post('/', this.userController.signUp);
+    this.router.get('/account', authenticated, authenticatedUser, this.userController.getUser);
+    this.router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), this.userController.putAccount);
+    this.router.put('/password', authenticated, authenticatedUser, this.userController.putPassword);
+    this.router.get('/plans', authenticated, authenticatedUser, this.userController.getUserPlans);
+    this.router.get('/like_stores', authenticated, authenticatedUser, this.userController.getUserCollections);
+    this.router.get('/reservations', authenticated, authenticatedUser, this.userController.getUserReservations);
   }
 
 }
-
-/* router.post('/', userController.signUp)
-router.get('/account', authenticated, authenticatedUser, userController.getUser)
-router.put('/account', authenticated, authenticatedUser, upload.single('avatar'), userController.putAccount)
-router.put('/password', authenticated, authenticatedUser, userController.putPassword)
-router.get('/plans', authenticated, authenticatedUser, userController.getUserPlans)
-router.get('/like_stores', authenticated, authenticatedUser, userController.getUserCollections)
-router.get('/reservations', authenticated, authenticatedUser, userController.getUserReservations) */

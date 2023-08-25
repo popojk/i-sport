@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import UserServices from '../../services/user-services';
-import { SignUpData, SignInData } from '../../interfaces/user-interface';
+import { UserAccountData, UserInstance, SignUpData, SignInData, UserPlanInstance, StoreWithUserPlanInstance, CollectionInstance, ReservationClass } from '../../interfaces/user-interface';
+import { ReturnMessage } from '../../interfaces/message-interface';
 
 export default class UserConroller {
 
@@ -11,29 +12,34 @@ export default class UserConroller {
   }
 
   public signIn = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.signIn(req, (err: any, data: SignInData) => err ? next(err) : res.json(data));
+    this.userServices.signIn(req, (err: any, data?: SignInData) => err ? next(err) : res.json(data));
   }
 
-   public signUp = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.signUp(req, (err: any, data: SignUpData) => err ? next(err) : res.json(data));
+  public signUp = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.signUp(req, (err: any, data?: SignUpData) => err ? next(err) : res.json(data));
   }
-/* getUser: (req, res, next) => {
-  userServices.getUser(req, (err, data) => err ? next(err) : res.json(data))
-},
-  putAccount: (req, res, next) => {
-    userServices.putAccount(req, (err, data) => err ? next(err) : res.json(data))
-  },
-    putPassword: (req, res, next) => {
-      userServices.putPassword(req, (err, data) => err ? next(err) : res.json(data))
-    },
-      getUserPlans: (req, res, next) => {
-        userServices.getUserPlans(req, (err, data) => err ? next(err) : res.json(data))
-      },
-        getUserCollections: (req, res, next) => {
-          userServices.getUserCollections(req, (err, data) => err ? next(err) : res.json(data))
-        },
-          getUserReservations: (req, res, next) => {
-            userServices.getUserReservations(req, (err, data) => err ? next(err) : res.json(data))
-          } */
+
+  public getUser = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.getUser(req, (err: any, data?: UserAccountData) => err ? next(err) : res.json(data));
+  }
+
+  public putAccount = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.putAccount(req, (err: any, data?: ReturnMessage) => err ? next(err) : res.json(data));
+  }
+
+  public putPassword = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.putPassword(req, (err: any, data?: ReturnMessage) => err ? next(err) : res.json(data));
+  }
+
+  public getUserPlans = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.getUserPlans(req, (err: any, data?: UserPlanInstance[] | StoreWithUserPlanInstance[]) => err ? next(err) : res.json(data));
+  }
+
+  public getUserCollections = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.getUserCollections(req, (err: any, data?: CollectionInstance[]) => err ? next(err) : res.json(data));
+  }
+
+  public getUserReservations = (req: Request, res: Response, next: NextFunction) => {
+    this.userServices.getUserReservations(req, (err: any, data?: ReservationClass[]) => err ? next(err) : res.json(data));
 
 }
