@@ -41,5 +41,6 @@ export default class UserConroller {
 
   public getUserReservations = (req: Request, res: Response, next: NextFunction) => {
     this.userServices.getUserReservations(req, (err: any, data?: ReservationClass[]) => err ? next(err) : res.json(data));
+  }
 
 }

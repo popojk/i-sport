@@ -3,20 +3,23 @@ import { ClassRoute } from "./modules/class";
 import { UserRoute } from "./modules/user";
 import UserController from "../../controllers/apis/user-controller";
 import { apiErrorHandler } from '../../middleware/error-handler';
-import { authenticatedUser } from "../../middleware/api-auth";
+import { authenticated, authenticatedUser } from "../../middleware/api-auth";
 import { Router } from 'express';
+import { StoreRoute } from "./modules/store";
 const passport = require('../../config/passport');
 
 export class ApiRoute extends RouteBase {
 
   private classRoute: ClassRoute;
   private userRoute: UserRoute;
+  private storeRoute: StoreRoute;
   private userController: UserController;
 
   constructor() {
     super();
     this.classRoute = new ClassRoute();
     this.userRoute = new UserRoute();
+    this.storeRoute = new  StoreRoute();
     this.userController = new UserController();
     this.registerRoute();
   }
@@ -25,7 +28,8 @@ export class ApiRoute extends RouteBase {
     this.router.post('/signin', passport.authenticate('local', { session: false }), authenticatedUser, this.userController.signIn);
     this.router.use('/users', this.userRoute.router);
     this.router.use('/classes', this.classRoute.router);
-    this.router.use('/', apiErrorHandler)
+    this.router.use('/stores', authenticated, authenticatedUser, this.storeRoute.router);
+    this.router.use('/', apiErrorHandler);
   }
 
 }
@@ -47,7 +51,7 @@ router.post('/signin', passport.authenticate('local', { session: false }), authe
 router.post('/owner/signin', passport.authenticate('local', { session: false }), authenticatedOwner, ownerController.signIn)
 router.use('/owner', owner)
 router.use('/users', user)
-router.use('/stores', authenticated, authenticatedUser, store)
+
 router.use('/classes', authenticated, authenticatedUser, cls)
 router.use('/reservations', authenticated, authenticatedUser, reservation)
 router.use('/orders', order)
