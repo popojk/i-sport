@@ -1,3 +1,4 @@
+import { Model } from "sequelize";
 
 export interface UserAttributes {
   id: number;
@@ -13,7 +14,7 @@ export interface UserInstance {
   dataValues: UserAttributes;
 }
 
-export interface UserPlanInstance {
+export interface UserPlanInstance extends Model {
   dataValues: {
     id: string;
     amountLeft: number;

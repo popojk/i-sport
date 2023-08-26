@@ -163,7 +163,7 @@ export default class UserServices {
     cb: (err: any, data?: UserPlanInstance[] | StoreWithUserPlanInstance[]) => void) => {
     const storeId = req.query.store_id;
     // if frontend set query params, get userPlans by storeId
-    if (storeId !== null) {
+    if (storeId !== undefined) {
       return UserPlan.findAll({
         where: {
           // find userplans with valid amount or still in valid date
@@ -220,7 +220,7 @@ export default class UserServices {
               });
               return store;
             });
-          return cb(null);
+          return cb(null, data);
         })
         .catch((err: any) => cb(err));
     }
