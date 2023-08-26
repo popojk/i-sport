@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-const classServices = require('../../services/class-services')
+import ClassServices from '../../services/class-services';
 
 export default class ClassController {
-  postClass (req: Request, res: Response, next: NextFunction) {
-    classServices.postClass(req, (err: any, data: any) => err ? next(err) : res.json(data));
+
+  private classServices = new ClassServices();
+
+  public postClass = (req: Request, res: Response, next: NextFunction) => {
+    this.classServices.postClass(req, (err: any, data?: string) => err ? next(err) : res.json(data));
   }
 }

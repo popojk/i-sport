@@ -24,11 +24,11 @@ export default class UserConroller {
   }
 
   public putAccount = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.putAccount(req, (err: any, data?: ReturnMessage) => err ? next(err) : res.json(data));
+    this.userServices.putAccount(req, (err: any, data?: string) => err ? next(err) : res.json(data));
   }
 
   public putPassword = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.putPassword(req, (err: any, data?: ReturnMessage) => err ? next(err) : res.json(data));
+    this.userServices.putPassword(req, (err: any, data?: string) => err ? next(err) : res.json(data));
   }
 
   public getUserPlans = (req: Request, res: Response, next: NextFunction) => {
@@ -36,7 +36,7 @@ export default class UserConroller {
   }
 
   public getUserCollections = (req: Request, res: Response, next: NextFunction) => {
-    this.userServices.getUserCollections(req, (err: any, data?: CollectionInstance[]) => err ? next(err) : res.json(data));
+    this.userServices.getUserCollections(req, (err: any, data?: CollectionInstance['Store'][]) => err ? next(err) : res.json(data));
   }
 
   public getUserReservations = (req: Request, res: Response, next: NextFunction) => {

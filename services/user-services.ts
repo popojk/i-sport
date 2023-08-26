@@ -91,7 +91,7 @@ export default class UserServices {
 
   public putAccount = (
     req: Request,
-    cb: (err: any, data?: ReturnMessage) => void) => {
+    cb: (err: any, data?: string) => void) => {
     try {
       // get user account data
       const { email, nickname } = req.body;
@@ -125,7 +125,7 @@ export default class UserServices {
           }
         })
         .then((updatedUser: UserInstance) => {
-          cb(null, { message: '更新成功' });
+          cb(null, '更新成功');
         })
         .catch((err: any) => cb(err));
     } catch (err: any) {
@@ -135,7 +135,7 @@ export default class UserServices {
 
   public putPassword = (
     req: Request,
-    cb: (err: any, data?: ReturnMessage) => void) => {
+    cb: (err: any, data?: string) => void) => {
     // get user password data
     const { password, confirmPassword } = req.body;
     if (password !== confirmPassword) throw new Error('第二次輸入密碼有誤');
@@ -153,7 +153,7 @@ export default class UserServices {
       })
       .then(() => {
         // return success message
-        return cb(null, { message: '更新成功' });
+        return cb(null, '更新成功');
       })
       .catch((err: any) => cb(err));
   }
@@ -228,7 +228,7 @@ export default class UserServices {
 
   public getUserCollections = (
     req: Request,
-    cb: (err: any, data?: CollectionInstance[]) => void) => {
+    cb: (err: any, data?: CollectionInstance['Store'][]) => void) => {
     return Collection.findAll({
       where: { userId: getUser(req).id },
       raw: true,
@@ -244,9 +244,9 @@ export default class UserServices {
     })
       .then((collections: CollectionInstance[]) => {
         if (collections.length === 0) throw new Error('沒有收藏場館');
-        const data: CollectionInstance[] = collections.map(collection => {
-          collection.dataValues.isLiked = collection.dataValues.isLiked === 1;
-          return collection;
+        const data: CollectionInstance['Store'][] = collections.map(collection => {
+          collection.Store.isLiked = collection.Store.isLiked === 1;
+          return collection.Store;
         });
         return cb(null, data);
       })

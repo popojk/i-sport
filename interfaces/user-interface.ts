@@ -32,27 +32,28 @@ export interface StoreWithUserPlanInstance {
 }
 
 export interface CollectionInstance {
-  dataValues: {
     id: number;
-    storeName: string
-    photo: string;
-    address: string;
-    introduction: string;
-    reviewCounts: number;
-    rating: number;
-    isLiked: any;
-  };
+    userId: number;
+    storeId: number;
+    Store: {
+      id: number;
+      storeName: string;
+      photo: string;
+      address: string;
+      introduction: string;
+      reviewCounts: number;
+      rating: number;
+      isLiked: any;
+    };
 }
 
 export interface ReservationInstance {
-  dataValues: {
     id: number;
     userId: number;
     classId: number;
     userPlanId: number;
     remark: string;
-    Class: ReservationClass
-  };
+    Class: ReservationClass;
 }
 
 export interface ReservationClass {

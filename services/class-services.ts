@@ -1,11 +1,11 @@
-const { Class, UserPlan, Reservation } = require('../models')
+const { Class, UserPlan, Reservation } = require('../models');
 import { Request } from 'express';
-import { getUser }  from '../_helpers';
-const sequelize = require('sequelize')
-const { Op } = require('sequelize')
+import { getUser } from '../_helpers';
+import sequelize from 'sequelize';
+import { Op } from 'sequelize';
 
 export default class ClassServices {
-  postClass (req: Request, cb: any) {
+  postClass(req: Request, cb: (err: any, data?: string) => void) {
     try {
       const { userPlanId, remark } = req.body;
       if (remark && remark.length > 50) throw new Error('備註不可超過50字元');
@@ -36,7 +36,7 @@ export default class ClassServices {
           if (!userPlan) throw new Error('沒有適用方案');
           if (userPlan.planType === '天數' && userPlan.expireDate > cls.startDateTime) {
             return Reservation.create({
-              userId: getUser(req)?.id,
+              userId: getUser(req).id,
               classId: cls.id,
               userPlanId: userPlan.id
             })
@@ -46,7 +46,7 @@ export default class ClassServices {
               .catch((err: any) => cb(err));
           } else {
             return Reservation.create({
-              userId: getUser(req)?.id,
+              userId: getUser(req).id,
               classId: cls.id,
               userPlanId: userPlan.id
             })
