@@ -115,7 +115,7 @@ export default class StoreServices {
               return cls.classScheduleId;
             });
             // scan all classSchedules, and build class if current classes has missing classes
-            const classesData: ClassScheduleInstance[] = [];
+            const classesData: any = [];
             classSchedules.forEach((schedule: ClassScheduleInstance) => {
               if (!classScheduleIds.includes(schedule.id)) {
                 classesData.push(buildClassData(schedule, currentSevenDaysAndDates));

@@ -1,4 +1,6 @@
-export interface StoreInstance {
+import { Model } from "sequelize";
+
+export interface StoreInstance extends Model {
   id: number;
   storeName: string;
   photo: string;
@@ -8,5 +10,5 @@ export interface StoreInstance {
   lng: number;
   reviewCounts: number;
   rating: number;
-  isLiked: any;
+  isLiked?: any;
 }

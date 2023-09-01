@@ -30,7 +30,7 @@ export function getCurrentSevenDays(){
   return currentSevenDates;
 }
 
-export function buildClassData(schedule: ClassScheduleInstance, currentSevenDates: Dates){
+export function buildClassData(schedule: ClassScheduleInstance, currentSevenDates: any){
   const { startTime, weekDay, storeId, id } = schedule;
   const [hh, mm] = startTime!.split(':');
   const date = currentSevenDates[weekDay!];

@@ -85,6 +85,7 @@ export interface SignUpData {
 export interface UserAccountData {
   id: number;
   email: string;
-  nickname: string;
+  nickname?: string;
   avatar?: string;
+  storeName?: string;
 }

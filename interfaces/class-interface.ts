@@ -1,3 +1,6 @@
+import { StoreInstance } from "./store-interface";
+import { Model } from "sequelize";
+
 export interface ClassInstance {
   id: number;
   date: any;
@@ -10,7 +13,7 @@ export interface ClassInstance {
   isReserved: any;
 }
 
-export interface ClassScheduleInstance {
+export interface ClassScheduleInstance extends Model {
   id?: number;
   weekDay?: number;
   className?: string;
@@ -18,4 +21,5 @@ export interface ClassScheduleInstance {
   endTime?: string;
   headcount?: number;
   storeId?: number;
+  Store?: StoreInstance;
 }

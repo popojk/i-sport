@@ -1,3 +1,5 @@
+import { StoreInstance } from "./store-interface";
+
 export interface ReviewInstance {
   id: number;
   createdAt: any;
@@ -5,4 +7,5 @@ export interface ReviewInstance {
   content: string;
   avatar: string;
   nickname: string;
+  Store?: StoreInstance;
 }
