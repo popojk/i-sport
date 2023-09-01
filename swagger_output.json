@@ -608,6 +608,14 @@
           }
         }
       },
+      "OwnerDeleteStoreResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "OwnerGetStoreResponse": {
         "type": "object",
         "properties": {
@@ -1803,6 +1811,41 @@
               "text/plain": {
                 "schema": {
                   "$ref": "#/components/schemas/OwnerGetStoreResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "owner delete a store",
+        "tags": [
+          "Owner"
+        ],
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OwnerDeleteStoreResponse"
                 }
               }
             }
